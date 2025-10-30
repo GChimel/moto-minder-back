@@ -15,7 +15,8 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
         database: configService.get('DB_DATABASE', 'motominder'),
         entities: [__dirname + '/../../../**/*.schema{.ts,.js}'],
         migrations: [__dirname + '/migrations/*{.ts,.js}'],
-        synchronize: configService.get('NODE_ENV') !== 'production',
+        synchronize: false, // Always use migrations instead of auto-sync
+        migrationsRun: true, // Automatically run migrations on startup
         logging: configService.get('NODE_ENV') === 'development',
       }),
       inject: [ConfigService],

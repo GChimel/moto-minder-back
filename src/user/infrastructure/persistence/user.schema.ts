@@ -9,17 +9,17 @@ import {
 @Entity('users')
 export class UserSchema {
   @PrimaryColumn('uuid')
-  id: string;
+  public id: string;
 
   @Column({ length: 255 })
-  name: string;
+  public name: string;
 
   @Column({ unique: true, length: 255 })
-  email: string;
+  public email: string;
 
   @CreateDateColumn({ name: 'created_at' })
-  createdAt: Date;
+  public createdAt: Date;
 
   @UpdateDateColumn({ name: 'updated_at' })
-  updatedAt: Date;
+  public updatedAt: Date;
 }

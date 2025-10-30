@@ -39,9 +39,6 @@ export class TypeOrmUserRepository implements UserRepositoryPort {
     await this.repository.delete({ id });
   }
 
-  /**
-   * Mapper: Domain Entity -> TypeORM Schema
-   */
   private toSchema(user: User): UserSchema {
     const schema = new UserSchema();
     schema.id = user.getId().getValue();
@@ -52,10 +49,6 @@ export class TypeOrmUserRepository implements UserRepositoryPort {
     return schema;
   }
 
-  /**
-   * Mapper: TypeORM Schema -> Domain Entity
-   * Uses the constructor to reconstruct User with existing data from database
-   */
   private toDomain(schema: UserSchema): User {
     return new User(
       new UserId(schema.id),
