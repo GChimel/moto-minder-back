@@ -6,7 +6,9 @@ import { Repository } from 'typeorm';
 import { Manufacturer } from '../../domain/entities/manufacturer.entity';
 
 @Injectable()
-export class TypeOrmManufacturerRepository implements ManufacturerRepositoryPort {
+export class TypeOrmManufacturerRepository
+  implements ManufacturerRepositoryPort
+{
   constructor(
     @InjectRepository(ManufacturerSchema)
     private readonly repository: Repository<ManufacturerSchema>,

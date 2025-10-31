@@ -1,0 +1,25 @@
+export class MotocycleModelResponseDto {
+  constructor(
+    public readonly id: string,
+    public readonly manufacturerId: string,
+    public readonly name: string,
+    public readonly yearStart: number,
+    public readonly yearEnd: number,
+    public readonly displacementCc: number,
+    public readonly engineCycle: string,
+    public readonly engineType: string,
+    public readonly valvesPerCylinder: number,
+    public readonly coolingSystem: string,
+    public readonly fuelSystem: string,
+    public readonly sparkPlugDefault: string,
+    public readonly batteryDefault: string,
+    public readonly finalDrive: string,
+    public readonly gears: number,
+    public readonly clutchType: string,
+    public readonly engineOilCapacityL: number,
+    public readonly recommendedOilViscosity: string,
+    public readonly recommendedOilSpec: string,
+    public readonly fuelTankCapacityL: number,
+    public readonly coolantCapacityL?: number | null,
+  ) {}
+}
