@@ -46,6 +46,7 @@ export class TypeOrmUserRepository implements UserRepositoryPort {
     schema.email = user.getEmail().getValue();
     schema.createdAt = user.getCreatedAt();
     schema.updatedAt = user.getUpdatedAt();
+    schema.password = user.getPassword();
     return schema;
   }
 
@@ -56,6 +57,7 @@ export class TypeOrmUserRepository implements UserRepositoryPort {
       new Email(schema.email),
       schema.createdAt,
       schema.updatedAt,
+      schema.password,
     );
   }
 }
