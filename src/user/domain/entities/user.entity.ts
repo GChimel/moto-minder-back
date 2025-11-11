@@ -1,5 +1,12 @@
 import { Email } from '../value-objects/email.vo';
 import { UserId } from '../value-objects/user-id.vo';
+import { UserPassword } from '../value-objects/user-password.vo';
+
+interface IUserModel {
+  name: string;
+  email: string;
+  password?: string;
+}
 
 export class User {
   constructor(
@@ -8,21 +15,25 @@ export class User {
     private email: Email,
     private readonly createdAt: Date,
     private updatedAt: Date,
+    private password?: string,
   ) {}
 
-  static create(name: string, email: string) {
-    if (!name || name.trim().length < 2) {
+  static async create(body: IUserModel) {
+    if (!body.name || body.name.trim().length < 2) {
       throw new Error(
         'Name is required and must be at least 2 characters long',
       );
     }
 
+    const password = await UserPassword.create(body.password || null);
+
     return new User(
       new UserId(),
-      name.trim(),
-      new Email(email),
+      body.name.trim(),
+      new Email(body.email),
       new Date(),
       new Date(),
+      password?.getValue(),
     );
   }
 
@@ -46,6 +57,10 @@ export class User {
     return this.updatedAt;
   }
 
+  getPassword(): string | undefined {
+    return this.password || undefined;
+  }
+
   updateName(name: string) {
     if (!name || name.trim().length < 2) {
       throw new Error(
@@ -58,6 +73,11 @@ export class User {
 
   updateEmail(email: string) {
     this.email = new Email(email);
+    this.updatedAt = new Date();
+  }
+
+  updatePassword(hashedPassword: string) {
+    this.password = hashedPassword;
     this.updatedAt = new Date();
   }
 

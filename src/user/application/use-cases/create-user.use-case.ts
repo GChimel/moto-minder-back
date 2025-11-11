@@ -8,6 +8,7 @@ import {
 export interface CreateUserDto {
   name: string;
   email: string;
+  password?: string;
 }
 
 @Injectable()
@@ -24,7 +25,7 @@ export class CreateUserUseCase {
       throw new Error('User already exists');
     }
 
-    const user = User.create(dto.name, dto.email);
+    const user = await User.create({ ...dto });
     return this.userRepository.save(user);
   }
 }
