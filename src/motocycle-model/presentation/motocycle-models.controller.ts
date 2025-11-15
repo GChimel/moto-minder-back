@@ -8,6 +8,7 @@ import {
   Param,
   Patch,
   Post,
+  UseGuards,
 } from '@nestjs/common';
 import { CreateMotocycleModelUseCase } from '../application/use-cases/create-motocycle-model.use-case';
 import { UpdateMotocycleModelUseCase } from '../application/use-cases/update-motocycle-model.use-case';
@@ -19,8 +20,10 @@ import { CreateMotocycleModelDto } from './dtos/create-motocycle-model.dto';
 import { UpdateMotocycleModelDto } from './dtos/update-motocycle-model.dto';
 import { MotocycleModelResponseDto } from './dtos/motocycle-model-response.dto';
 import { MotocycleModel } from '../domain/entities/motocycle-model.entity';
+import { JwtAuthGuard } from '../../auth/presentation/guards/jwt.guard';
 
 @Controller('motocycle-models')
+@UseGuards(JwtAuthGuard)
 export class MotocycleModelsController {
   constructor(
     private readonly createMotocycleModelUseCase: CreateMotocycleModelUseCase,
@@ -41,18 +44,21 @@ export class MotocycleModelsController {
   }
 
   @Get()
+  @HttpCode(HttpStatus.OK)
   async findAll(): Promise<MotocycleModelResponseDto[]> {
     const models = await this.findAllMotocycleModelsUseCase.execute();
     return models.map((model) => this.mapToResponse(model));
   }
 
   @Get(':id')
+  @HttpCode(HttpStatus.OK)
   async findById(@Param('id') id: string): Promise<MotocycleModelResponseDto> {
     const model = await this.findMotocycleModelByIdUseCase.execute(id);
     return this.mapToResponse(model);
   }
 
   @Get('manufacturer/:manufacturerId')
+  @HttpCode(HttpStatus.OK)
   async findByManufacturer(
     @Param('manufacturerId') manufacturerId: string,
   ): Promise<MotocycleModelResponseDto[]> {
@@ -64,6 +70,7 @@ export class MotocycleModelsController {
   }
 
   @Patch(':id')
+  @HttpCode(HttpStatus.OK)
   async update(
     @Param('id') id: string,
     @Body() dto: UpdateMotocycleModelDto,

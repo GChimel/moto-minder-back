@@ -1,4 +1,6 @@
+import { BadRequestException } from '@nestjs/common';
 import { compare, hash } from 'bcrypt';
+import { User } from '../entities/user.entity';
 
 export class UserPassword {
   private constructor(public readonly hash: string) {}
@@ -7,21 +9,30 @@ export class UserPassword {
     value: string | null,
   ): Promise<UserPassword | null> {
     if (!value) {
-      console.log('aqui');
       return null;
     }
 
     if (value && value.length < 8) {
-      throw new Error('Password must be at least 8 characters long');
+      throw new BadRequestException(
+        'Password must be at least 8 characters long',
+      );
     }
 
-    const hashedPassword = await hash(value, 8);
+    const hashedPassword = await hash(value, 10);
 
     return new UserPassword(hashedPassword);
   }
 
-  public async compare(value: string) {
-    return await compare(value, this.hash);
+  public static async compare(value: string, user: User): Promise<boolean> {
+    const password = user.getPassword();
+
+    if (!password) {
+      return false;
+    }
+
+    const isPasswordValid = await compare(value, password);
+
+    return isPasswordValid;
   }
 
   public getValue(): string {
