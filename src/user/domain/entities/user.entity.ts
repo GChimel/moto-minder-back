@@ -1,3 +1,4 @@
+import { BadRequestException } from '@nestjs/common';
 import { Email } from '../value-objects/email.vo';
 import { UserId } from '../value-objects/user-id.vo';
 import { UserPassword } from '../value-objects/user-password.vo';
@@ -20,7 +21,7 @@ export class User {
 
   static async create(body: IUserModel) {
     if (!body.name || body.name.trim().length < 2) {
-      throw new Error(
+      throw new BadRequestException(
         'Name is required and must be at least 2 characters long',
       );
     }
@@ -63,7 +64,7 @@ export class User {
 
   updateName(name: string) {
     if (!name || name.trim().length < 2) {
-      throw new Error(
+      throw new BadRequestException(
         'Name is required and must be at least 2 characters long',
       );
     }

@@ -6,6 +6,7 @@ import {
   HttpStatus,
   Param,
   Post,
+  UseGuards,
 } from '@nestjs/common';
 import { CreateManufacturerUseCase } from '../application/use-cases/create-manufacturer.use-case';
 import { FindAllManufacturersUseCase } from '../application/use-cases/find-all-manufacturers.use-case';
@@ -14,8 +15,10 @@ import { FindManufacturerByNameUseCase } from '../application/use-cases/find-man
 import { CreateManufacturerDto } from './dtos/create-manufacturer.dto';
 import { ManufacturerResponseDto } from './dtos/manufacturer-response.dto';
 import { Manufacturer } from '../domain/entities/manufacturer.entity';
+import { JwtAuthGuard } from '../../auth/presentation/guards/jwt.guard';
 
 @Controller('manufacturers')
+@UseGuards(JwtAuthGuard)
 export class ManufacturersController {
   constructor(
     private readonly createManufacturerUseCase: CreateManufacturerUseCase,
