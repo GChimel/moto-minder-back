@@ -1,7 +1,6 @@
 import { MaintenanceRecord } from '../../domain/entities/maintenance-record.entity';
 
-export const MAINTENANCE_RECORD_REPOSITORY =
-  'MAINTENANCE_RECORD_REPOSITORY';
+export const MAINTENANCE_RECORD_REPOSITORY = 'MAINTENANCE_RECORD_REPOSITORY';
 
 export interface MaintenanceRecordRepositoryPort {
   save(record: MaintenanceRecord): Promise<MaintenanceRecord>;

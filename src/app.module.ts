@@ -6,6 +6,7 @@ import { ManufacturersModule } from './manufacturers/manufacturers.module';
 import { MotocycleModelsModule } from './motocycle-model/motocycle-models.module';
 import { AuthModule } from './auth/auth.module';
 import { UserMotocycleModule } from './user-motocycle/user-motocycle.module';
+import { MaintenanceModule } from './maintenance/maintenance.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { UserMotocycleModule } from './user-motocycle/user-motocycle.module';
     ManufacturersModule,
     MotocycleModelsModule,
     UserMotocycleModule,
+    MaintenanceModule,
   ],
   controllers: [],
   providers: [],

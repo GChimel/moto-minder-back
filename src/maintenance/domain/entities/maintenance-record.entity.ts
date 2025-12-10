@@ -205,10 +205,7 @@ export class MaintenanceRecord {
 
   private validateCost(cost: number | undefined): void {
     if (cost !== undefined && cost < 0) {
-      throw new InvalidArgumentException(
-        'cost',
-        'Cost cannot be negative',
-      );
+      throw new InvalidArgumentException('cost', 'Cost cannot be negative');
     }
   }
 }
