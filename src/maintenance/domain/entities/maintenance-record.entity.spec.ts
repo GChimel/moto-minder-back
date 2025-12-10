@@ -31,7 +31,7 @@ describe('MaintenanceRecord Entity', () => {
         serviceType: ServiceType.TIRE_REPLACEMENT,
         performedAt: validDate,
         odometerAtService: 20000,
-        cost: 150.50,
+        cost: 150.5,
         partsUsed: 'Michelin Pilot Road 4',
         notes: 'Front and rear tires replaced',
         nextServiceInterval: { intervalKm: 15000, intervalMonths: 12 },
@@ -39,7 +39,7 @@ describe('MaintenanceRecord Entity', () => {
 
       const record = MaintenanceRecord.create(dto);
 
-      expect(record.getCost()).toBe(150.50);
+      expect(record.getCost()).toBe(150.5);
       expect(record.getPartsUsed()).toBe('Michelin Pilot Road 4');
       expect(record.getNotes()).toBe('Front and rear tires replaced');
       expect(record.getNextServiceInterval()).toBeDefined();
@@ -112,7 +112,9 @@ describe('MaintenanceRecord Entity', () => {
       expect(record.getCreatedAt().getTime()).toBeGreaterThanOrEqual(
         before.getTime(),
       );
-      expect(record.getCreatedAt().getTime()).toBeLessThanOrEqual(after.getTime());
+      expect(record.getCreatedAt().getTime()).toBeLessThanOrEqual(
+        after.getTime(),
+      );
       expect(record.getUpdatedAt().getTime()).toBeGreaterThanOrEqual(
         before.getTime(),
       );

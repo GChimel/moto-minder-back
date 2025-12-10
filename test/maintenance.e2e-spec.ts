@@ -96,7 +96,7 @@ describe('Maintenance E2E Tests', () => {
           serviceType: ServiceType.OIL_CHANGE,
           performedAt: new Date('2024-01-15'),
           odometerAtService: 10000,
-          cost: 50.50,
+          cost: 50.5,
           partsUsed: 'Castrol Oil 10W30',
           notes: 'Regular oil change',
           nextServiceInterval: { intervalKm: 5000, intervalMonths: 6 },
@@ -106,7 +106,7 @@ describe('Maintenance E2E Tests', () => {
       expect(response.body).toHaveProperty('id');
       expect(response.body.serviceType).toBe(ServiceType.OIL_CHANGE);
       expect(response.body.odometerAtService).toBe(10000);
-      expect(response.body.cost).toBe(50.50);
+      expect(response.body.cost).toBe(50.5);
       maintenanceRecordId = response.body.id;
     });
 
@@ -330,11 +330,11 @@ describe('Maintenance E2E Tests', () => {
         .patch(`/maintenance/${maintenanceRecordId}`)
         .set('Authorization', `Bearer ${authToken}`)
         .send({
-          cost: 75.50,
+          cost: 75.5,
         })
         .expect(200);
 
-      expect(response.body.cost).toBe(75.50);
+      expect(response.body.cost).toBe(75.5);
     });
 
     it('should update maintenance record notes', async () => {

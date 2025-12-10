@@ -16,7 +16,10 @@ describe('ServiceInterval Value Object', () => {
     });
 
     it('should create a service interval with both km and months', () => {
-      const interval = new ServiceInterval({ intervalKm: 10000, intervalMonths: 12 });
+      const interval = new ServiceInterval({
+        intervalKm: 10000,
+        intervalMonths: 12,
+      });
       expect(interval.getIntervalKm()).toBe(10000);
       expect(interval.getIntervalMonths()).toBe(12);
     });
@@ -145,8 +148,14 @@ describe('ServiceInterval Value Object', () => {
 
   describe('equals', () => {
     it('should return true for intervals with same values', () => {
-      const interval1 = new ServiceInterval({ intervalKm: 5000, intervalMonths: 6 });
-      const interval2 = new ServiceInterval({ intervalKm: 5000, intervalMonths: 6 });
+      const interval1 = new ServiceInterval({
+        intervalKm: 5000,
+        intervalMonths: 6,
+      });
+      const interval2 = new ServiceInterval({
+        intervalKm: 5000,
+        intervalMonths: 6,
+      });
       expect(interval1.equals(interval2)).toBe(true);
     });
 
@@ -163,8 +172,14 @@ describe('ServiceInterval Value Object', () => {
     });
 
     it('should return false for intervals with different combination of values', () => {
-      const interval1 = new ServiceInterval({ intervalKm: 5000, intervalMonths: 6 });
-      const interval2 = new ServiceInterval({ intervalKm: 5000, intervalMonths: 12 });
+      const interval1 = new ServiceInterval({
+        intervalKm: 5000,
+        intervalMonths: 6,
+      });
+      const interval2 = new ServiceInterval({
+        intervalKm: 5000,
+        intervalMonths: 12,
+      });
       expect(interval1.equals(interval2)).toBe(false);
     });
 

@@ -7,7 +7,6 @@ import { GetMaintenanceHistoryUseCase } from './get-maintenance-history.use-case
 import { MaintenanceRecordRepositoryPort } from '../ports/maintenance-record.repository.port';
 import { MaintenanceRecord } from '../../domain/entities/maintenance-record.entity';
 import { ServiceType } from '../../domain/enums/service-type.enum';
-import { ServiceInterval } from '../../domain/value-objects/service-interval.vo';
 import { InvalidArgumentException } from '../../../shared/domain/exceptions/invalid-argument.exception';
 import { MaintenanceRecordNotFoundException } from '../../domain/exceptions/maintenance-exceptions';
 
@@ -119,9 +118,13 @@ describe('Maintenance Use Cases', () => {
         odometerAtService: 15000,
       });
 
-      mockRepository.findByUserMotocycleId.mockResolvedValue([record1, record2]);
+      mockRepository.findByUserMotocycleId.mockResolvedValue([
+        record1,
+        record2,
+      ]);
 
-      const results = await findByMotorcycleUseCase.execute(validUserMotocycleId);
+      const results =
+        await findByMotorcycleUseCase.execute(validUserMotocycleId);
 
       expect(mockRepository.findByUserMotocycleId).toHaveBeenCalledWith(
         validUserMotocycleId,
@@ -137,7 +140,8 @@ describe('Maintenance Use Cases', () => {
     it('should return empty array if no records found', async () => {
       mockRepository.findByUserMotocycleId.mockResolvedValue([]);
 
-      const results = await findByMotorcycleUseCase.execute(validUserMotocycleId);
+      const results =
+        await findByMotorcycleUseCase.execute(validUserMotocycleId);
 
       expect(results).toEqual([]);
     });
@@ -167,7 +171,10 @@ describe('Maintenance Use Cases', () => {
         nextServiceInterval: { intervalKm: 10000 },
       });
 
-      mockRepository.findByUserMotocycleId.mockResolvedValue([record1, record2]);
+      mockRepository.findByUserMotocycleId.mockResolvedValue([
+        record1,
+        record2,
+      ]);
 
       const results = await findUpcomingUseCase.execute(
         validUserMotocycleId,
@@ -196,7 +203,10 @@ describe('Maintenance Use Cases', () => {
         nextServiceInterval: { intervalKm: 10000 },
       });
 
-      mockRepository.findByUserMotocycleId.mockResolvedValue([record1, record2]);
+      mockRepository.findByUserMotocycleId.mockResolvedValue([
+        record1,
+        record2,
+      ]);
 
       const results = await findUpcomingUseCase.execute(
         validUserMotocycleId,
@@ -368,7 +378,10 @@ describe('Maintenance Use Cases', () => {
 
     it('should throw if skip is negative', async () => {
       await expect(
-        getHistoryUseCase.execute(validUserMotocycleId, { skip: -1, limit: 50 }),
+        getHistoryUseCase.execute(validUserMotocycleId, {
+          skip: -1,
+          limit: 50,
+        }),
       ).rejects.toThrow(InvalidArgumentException);
     });
 
