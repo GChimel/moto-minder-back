@@ -1,4 +1,5 @@
-
+/* eslint-disable @typescript-eslint/unbound-method */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { ConflictException } from '@nestjs/common';
 import {
   CreateUserMotocycleUseCase,
@@ -23,7 +24,6 @@ describe('CreateUserMotocycleUseCase', () => {
   const mockManufacturerId = '770e8400-e29b-41d4-a716-446655440000';
 
   beforeEach(() => {
-
     userMotocycleRepository = {
       save: jest.fn(),
       findById: jest.fn(),
@@ -66,7 +66,6 @@ describe('CreateUserMotocycleUseCase', () => {
     };
 
     it('should create a user motorcycle successfully', async () => {
-
       const mockUser = await User.create({
         name: 'John Doe',
         email: 'john@example.com',
@@ -117,7 +116,6 @@ describe('CreateUserMotocycleUseCase', () => {
     });
 
     it('should throw EntityNotFoundException when user does not exist', async () => {
-
       userRepository.findById.mockResolvedValue(null);
 
       await expect(useCase.execute(validDto)).rejects.toThrow(
@@ -128,7 +126,6 @@ describe('CreateUserMotocycleUseCase', () => {
     });
 
     it('should throw EntityNotFoundException when motorcycle model does not exist', async () => {
-
       const mockUser = await User.create({
         name: 'John Doe',
         email: 'john@example.com',
@@ -148,7 +145,6 @@ describe('CreateUserMotocycleUseCase', () => {
     });
 
     it('should throw ConflictException when manufacturing year is before model year start', async () => {
-
       const mockUser = await User.create({
         name: 'John Doe',
         email: 'john@example.com',
@@ -190,7 +186,6 @@ describe('CreateUserMotocycleUseCase', () => {
     });
 
     it('should throw ConflictException when manufacturing year is after model year end', async () => {
-
       const mockUser = await User.create({
         name: 'John Doe',
         email: 'john@example.com',
@@ -232,7 +227,6 @@ describe('CreateUserMotocycleUseCase', () => {
     });
 
     it('should accept manufacturing year at model year start boundary', async () => {
-
       const mockUser = await User.create({
         name: 'John Doe',
         email: 'john@example.com',
@@ -281,7 +275,6 @@ describe('CreateUserMotocycleUseCase', () => {
     });
 
     it('should accept manufacturing year at model year end boundary', async () => {
-
       const mockUser = await User.create({
         name: 'John Doe',
         email: 'john@example.com',
@@ -330,7 +323,6 @@ describe('CreateUserMotocycleUseCase', () => {
     });
 
     it('should validate all three dependencies before creating motorcycle', async () => {
-
       const mockUser = await User.create({
         name: 'John Doe',
         email: 'john@example.com',
@@ -348,7 +340,6 @@ describe('CreateUserMotocycleUseCase', () => {
     });
 
     it('should handle multiple users creating motorcycles independently', async () => {
-
       const user1Id = '550e8400-e29b-41d4-a716-446655440001';
       const user2Id = '550e8400-e29b-41d4-a716-446655440002';
 
@@ -395,22 +386,6 @@ describe('CreateUserMotocycleUseCase', () => {
 
       motocycleModelRepository.findById.mockResolvedValue(mockMotocycleModel);
 
-      const moto1 = UserMotocycle.create({
-        userId: user1Id,
-        motocycleModelId: mockMotocycleModelId,
-        nickname: 'User 1 Harley',
-        manufacturingYear: 2020,
-        currentOdometer: 5000,
-      });
-
-      const moto2 = UserMotocycle.create({
-        userId: user2Id,
-        motocycleModelId: mockMotocycleModelId,
-        nickname: 'User 2 Harley',
-        manufacturingYear: 2021,
-        currentOdometer: 3000,
-      });
-
       userMotocycleRepository.save.mockImplementation((moto: UserMotocycle) =>
         Promise.resolve(moto),
       );
@@ -440,7 +415,6 @@ describe('CreateUserMotocycleUseCase', () => {
 
   describe('repository interactions', () => {
     it('should call save with the created user motorcycle', async () => {
-
       const mockUser = await User.create({
         name: 'John Doe',
         email: 'john@example.com',

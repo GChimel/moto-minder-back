@@ -33,7 +33,6 @@ export class OAuthLoginUseCase {
   ) {}
 
   async execute(dto: OAuthLoginDto): Promise<{ token: string; user: User }> {
-
     const oauthProvider = this.getOAuthProvider(dto.provider);
 
     const profile = await oauthProvider.getProfile(dto.code);

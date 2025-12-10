@@ -1,4 +1,6 @@
-
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
@@ -25,7 +27,6 @@ describe('User API (E2E - Real Database)', () => {
   });
 
   beforeEach(async () => {
-
     await dataSource.query('DELETE FROM users');
   });
 
@@ -52,7 +53,6 @@ describe('User API (E2E - Real Database)', () => {
     });
 
     it('should enforce unique email constraint', async () => {
-
       await request(app.getHttpServer()).post('/users').send({
         name: 'John Doe',
         email: 'john@example.com',
@@ -68,7 +68,6 @@ describe('User API (E2E - Real Database)', () => {
     });
 
     it('should persist data across requests', async () => {
-
       const createResponse = await request(app.getHttpServer())
         .post('/users')
         .send({

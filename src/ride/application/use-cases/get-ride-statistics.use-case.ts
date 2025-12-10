@@ -28,7 +28,6 @@ export class GetRideStatisticsUseCase {
   ) {}
 
   async execute(userMotocycleId: string): Promise<RideStatisticsDto> {
-
     if (!userMotocycleId || userMotocycleId.trim() === '') {
       throw new InvalidArgumentException(
         'userMotocycleId',

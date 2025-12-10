@@ -82,7 +82,6 @@ describe('ServiceInterval Value Object', () => {
   describe('calculateNextServiceDueDate', () => {
     it('should calculate next service date based on interval', () => {
       const interval = new ServiceInterval({ intervalMonths: 6 });
-      const now = new Date();
       const nextDue = interval.calculateNextServiceDueDate();
 
       expect(nextDue).toBeDefined();

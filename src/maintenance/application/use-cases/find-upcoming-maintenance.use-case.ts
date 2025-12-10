@@ -26,7 +26,6 @@ export class FindUpcomingMaintenanceUseCase {
     userMotocycleId: string,
     currentOdometer: number,
   ): Promise<UpcomingMaintenanceDto[]> {
-
     if (!userMotocycleId || userMotocycleId.trim() === '') {
       throw new InvalidArgumentException(
         'userMotocycleId',
@@ -67,7 +66,6 @@ export class FindUpcomingMaintenanceUseCase {
       })
 
       .sort((a, b) => {
-
         if (a.isOverdueByOdometer && !b.isOverdueByOdometer) return -1;
         if (!a.isOverdueByOdometer && b.isOverdueByOdometer) return 1;
         if (a.isOverdueByDate && !b.isOverdueByDate) return -1;

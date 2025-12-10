@@ -104,7 +104,6 @@ describe('Year Value Object', () => {
 
   describe('year range validation for motorcycles', () => {
     it('should accept motorcycle years within valid range', () => {
-
       expect(() => new Year(1950)).not.toThrow();
       expect(() => new Year(2000)).not.toThrow();
       expect(() => new Year(currentYear)).not.toThrow();

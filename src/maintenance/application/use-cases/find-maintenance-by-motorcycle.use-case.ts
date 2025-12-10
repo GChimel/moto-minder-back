@@ -15,7 +15,6 @@ export class FindMaintenanceByMotorcycleUseCase {
   ) {}
 
   async execute(userMotocycleId: string): Promise<MaintenanceRecord[]> {
-
     if (!userMotocycleId || userMotocycleId.trim() === '') {
       throw new InvalidArgumentException(
         'userMotocycleId',

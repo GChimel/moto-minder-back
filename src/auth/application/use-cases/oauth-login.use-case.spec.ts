@@ -1,4 +1,5 @@
-
+/* eslint-disable @typescript-eslint/unbound-method */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { BadRequestException } from '@nestjs/common';
 import { OAuthLoginUseCase, OAuthLoginDto } from './oauth-login.use-case';
 import { IOAuthProvider, OAuthProfile } from '../ports/oauth-provider.port';
@@ -14,7 +15,6 @@ describe('OAuthLoginUseCase', () => {
   let authTokenGenerator: jest.Mocked<IAuthTokenGenerator>;
 
   beforeEach(() => {
-
     googleOAuthProvider = {
       getProfile: jest.fn(),
       refreshToken: jest.fn(),
@@ -60,7 +60,6 @@ describe('OAuthLoginUseCase', () => {
     };
 
     it('should create new user and return token for first-time Google login', async () => {
-
       const expectedUser = await User.create({
         name: mockGoogleProfile.name,
         email: mockGoogleProfile.email,
@@ -89,7 +88,6 @@ describe('OAuthLoginUseCase', () => {
     });
 
     it('should return token for existing Google user without creating new user', async () => {
-
       const existingUser = await User.create({
         name: 'John Doe',
         email: 'user@gmail.com',
@@ -116,7 +114,6 @@ describe('OAuthLoginUseCase', () => {
     });
 
     it('should handle Google OAuth profile correctly', async () => {
-
       const googleProfile: OAuthProfile = {
         id: 'google_user_456',
         email: 'jane@gmail.com',
@@ -161,7 +158,6 @@ describe('OAuthLoginUseCase', () => {
     };
 
     it('should create new user and return token for first-time Garmin login', async () => {
-
       const expectedUser = await User.create({
         name: mockGarminProfile.name,
         email: mockGarminProfile.email,
@@ -187,7 +183,6 @@ describe('OAuthLoginUseCase', () => {
     });
 
     it('should return token for existing Garmin user without creating new user', async () => {
-
       const existingUser = await User.create({
         name: 'Bob Rider',
         email: 'rider@garmin.com',
@@ -216,7 +211,6 @@ describe('OAuthLoginUseCase', () => {
 
   describe('provider selection', () => {
     it('should use Google provider when provider is "google"', async () => {
-
       const mockProfile: OAuthProfile = {
         id: 'user_id',
         email: 'test@gmail.com',
@@ -245,7 +239,6 @@ describe('OAuthLoginUseCase', () => {
     });
 
     it('should use Garmin provider when provider is "garmin"', async () => {
-
       const mockProfile: OAuthProfile = {
         id: 'user_id',
         email: 'test@garmin.com',
@@ -274,7 +267,6 @@ describe('OAuthLoginUseCase', () => {
     });
 
     it('should throw BadRequestException for unsupported provider', async () => {
-
       await expect(
         useCase.execute({
           code: 'code',
@@ -286,7 +278,6 @@ describe('OAuthLoginUseCase', () => {
 
   describe('token generation', () => {
     it('should generate token with correct subject (user id)', async () => {
-
       const mockProfile: OAuthProfile = {
         id: 'oauth_id',
         email: 'test@gmail.com',
@@ -320,7 +311,6 @@ describe('OAuthLoginUseCase', () => {
     });
 
     it('should return generated token in response', async () => {
-
       const mockProfile: OAuthProfile = {
         id: 'oauth_id',
         email: 'test@gmail.com',
@@ -352,7 +342,6 @@ describe('OAuthLoginUseCase', () => {
 
   describe('synthetic password for OAuth users', () => {
     it('should create OAuth user with synthetic password containing provider and id', async () => {
-
       const mockProfile: OAuthProfile = {
         id: 'unique_oauth_id_123',
         email: 'test@gmail.com',
@@ -385,7 +374,6 @@ describe('OAuthLoginUseCase', () => {
 
   describe('error handling', () => {
     it('should propagate OAuth provider errors', async () => {
-
       googleOAuthProvider.getProfile.mockRejectedValue(
         new Error('OAuth request failed'),
       );
@@ -399,7 +387,6 @@ describe('OAuthLoginUseCase', () => {
     });
 
     it('should propagate repository errors', async () => {
-
       const mockProfile: OAuthProfile = {
         id: 'oauth_id',
         email: 'test@gmail.com',
@@ -422,7 +409,6 @@ describe('OAuthLoginUseCase', () => {
     });
 
     it('should propagate token generation errors', async () => {
-
       const mockProfile: OAuthProfile = {
         id: 'oauth_id',
         email: 'test@gmail.com',
@@ -454,7 +440,6 @@ describe('OAuthLoginUseCase', () => {
 
   describe('multiple OAuth login flows', () => {
     it('should handle sequential logins with different providers', async () => {
-
       const googleProfile: OAuthProfile = {
         id: 'google_id',
         email: 'user@gmail.com',

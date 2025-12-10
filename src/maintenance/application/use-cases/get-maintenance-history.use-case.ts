@@ -31,7 +31,6 @@ export class GetMaintenanceHistoryUseCase {
     userMotocycleId: string,
     pagination?: PaginationDto,
   ): Promise<MaintenanceHistoryResultDto> {
-
     if (!userMotocycleId || userMotocycleId.trim() === '') {
       throw new InvalidArgumentException(
         'userMotocycleId',

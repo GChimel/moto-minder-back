@@ -21,7 +21,6 @@ export class CompleteRideUseCase {
   ) {}
 
   async execute(id: string, dto: CompleteRideDto): Promise<Ride> {
-
     if (!id || id.trim() === '') {
       throw new InvalidArgumentException('id', 'Ride ID is required');
     }

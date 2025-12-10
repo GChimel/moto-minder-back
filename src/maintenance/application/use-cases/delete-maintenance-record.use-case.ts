@@ -15,7 +15,6 @@ export class DeleteMaintenanceRecordUseCase {
   ) {}
 
   async execute(id: string): Promise<void> {
-
     if (!id || id.trim() === '') {
       throw new InvalidArgumentException(
         'id',

@@ -1,4 +1,4 @@
-
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
 import { UserPassword } from './user-password.vo';
 import { InvalidArgumentException } from '../../../shared/domain/exceptions/invalid-argument.exception';
 
@@ -133,7 +133,6 @@ describe('UserPassword Value Object', () => {
       const mockUser = {
         getPassword: () =>
           '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcg7b3XeKeUxWdeS86E36P4/KFm',
-
       };
 
       const result = await UserPassword.compare(password, mockUser as any);
@@ -165,7 +164,6 @@ describe('UserPassword Value Object', () => {
     });
 
     it('should handle bcrypt comparison correctly', async () => {
-
       const plainPassword = 'testPassword123';
       const userPassword = await UserPassword.create(plainPassword);
 
@@ -348,7 +346,6 @@ describe('UserPassword Value Object', () => {
     });
 
     it('should verify password in authentication flow', async () => {
-
       const plainPassword = 'MySecurePassword123';
       const storedPassword = await UserPassword.create(plainPassword);
 

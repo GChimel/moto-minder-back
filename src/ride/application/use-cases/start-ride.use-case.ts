@@ -16,7 +16,6 @@ export class StartRideUseCase {
   ) {}
 
   async execute(dto: CreateRideDto): Promise<Ride> {
-
     if (!dto.userMotocycleId || dto.userMotocycleId.trim() === '') {
       throw new InvalidArgumentException(
         'userMotocycleId',

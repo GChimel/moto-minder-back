@@ -95,15 +95,23 @@ export class UserMotocycleController {
     await this.deleteUserMotocycleUseCase.execute(id);
   }
 
-  private mapToResponse(userMotocycle): UserMotocycleResponseDto {
+  private mapToResponse(userMotocycle: any): UserMotocycleResponseDto {
     return {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
       id: userMotocycle.getId().getValue(),
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
       userId: userMotocycle.getUserId().getValue(),
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
       motocycleModelId: userMotocycle.getMotocycleModelId().getValue(),
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
       nickname: userMotocycle.getNickname().getValue(),
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
       manufacturingYear: userMotocycle.getManufacturingYear().getValue(),
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
       currentOdometer: userMotocycle.getCurrentOdometer().getValue(),
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
       createdAt: userMotocycle.getCreatedAt(),
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
       updatedAt: userMotocycle.getUpdatedAt(),
     };
   }

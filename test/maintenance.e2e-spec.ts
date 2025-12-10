@@ -1,5 +1,7 @@
-
-
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
 import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import * as request from 'supertest';
@@ -62,7 +64,6 @@ describe('Maintenance E2E Tests', () => {
     });
 
     it('should create a motorcycle for the user', async () => {
-
       const modelsResponse = await request(app.getHttpServer())
         .get('/motocycle-models')
         .set('Authorization', `Bearer ${authToken}`)
@@ -182,7 +183,6 @@ describe('Maintenance E2E Tests', () => {
     });
 
     it('should return empty array for motorcycle with no maintenance', async () => {
-
       const modelsResponse = await request(app.getHttpServer())
         .get('/motocycle-models')
         .set('Authorization', `Bearer ${authToken}`)
@@ -214,7 +214,6 @@ describe('Maintenance E2E Tests', () => {
 
   describe('GET /maintenance/upcoming', () => {
     beforeAll(async () => {
-
       await request(app.getHttpServer())
         .post('/maintenance')
         .set('Authorization', `Bearer ${authToken}`)
@@ -295,7 +294,6 @@ describe('Maintenance E2E Tests', () => {
     });
 
     it('should respect pagination parameters', async () => {
-
       for (let i = 0; i < 5; i++) {
         await request(app.getHttpServer())
           .post('/maintenance')
@@ -421,7 +419,6 @@ describe('Maintenance E2E Tests', () => {
     });
 
     it('should confirm deletion', async () => {
-
       const response = await request(app.getHttpServer())
         .get(`/maintenance/history/${userMotocycleId}`)
         .set('Authorization', `Bearer ${authToken}`)

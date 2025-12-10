@@ -1,7 +1,6 @@
 import { MaintenanceRecord } from './maintenance-record.entity';
 import { ServiceType } from '../enums/service-type.enum';
 import { ServiceInterval } from '../value-objects/service-interval.vo';
-import { IdVO } from '../../../shared/infrastructure/domain/value-objects/id-vo';
 import { InvalidArgumentException } from '../../../shared/domain/exceptions/invalid-argument.exception';
 
 describe('MaintenanceRecord Entity', () => {

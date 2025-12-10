@@ -1,4 +1,4 @@
-
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
 import { Email } from './email.vo';
 
 describe('Email Value Object', () => {
@@ -87,7 +87,6 @@ describe('Email Value Object', () => {
     });
 
     it('should accept email with consecutive dots (regex allows)', () => {
-
       expect(() => new Email('user..name@example.com')).not.toThrow();
     });
 

@@ -32,7 +32,6 @@ export class CreateUserMotocycleUseCase {
   ) {}
 
   async execute(dto: CreateUserMotocycleDto): Promise<UserMotocycle> {
-
     const user = await this.userRepository.findById(dto.userId);
     if (!user) {
       throw new EntityNotFoundException('User', dto.userId);

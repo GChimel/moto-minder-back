@@ -15,7 +15,6 @@ export class FindRidesByMotorcycleUseCase {
   ) {}
 
   async execute(userMotocycleId: string): Promise<Ride[]> {
-
     if (!userMotocycleId || userMotocycleId.trim() === '') {
       throw new InvalidArgumentException(
         'userMotocycleId',

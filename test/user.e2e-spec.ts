@@ -1,4 +1,5 @@
-
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
@@ -39,7 +40,6 @@ describe('User API (E2E)', () => {
     });
 
     it('should return 500 for duplicate email', async () => {
-
       await request(app.getHttpServer()).post('/users').send({
         name: 'John Doe',
         email: 'john@example.com',
@@ -75,7 +75,6 @@ describe('User API (E2E)', () => {
     });
 
     it('should create multiple users', async () => {
-
       const user1Response = await request(app.getHttpServer())
         .post('/users')
         .send({
@@ -91,7 +90,6 @@ describe('User API (E2E)', () => {
         });
 
       expect(user1Response.body.id).not.toBe(user2Response.body.id);
-
     });
   });
 });

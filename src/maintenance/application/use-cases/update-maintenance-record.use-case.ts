@@ -27,7 +27,6 @@ export class UpdateMaintenanceRecordUseCase {
     id: string,
     updateDto: UpdateMaintenanceRecordDto,
   ): Promise<MaintenanceRecord> {
-
     if (!id || id.trim() === '') {
       throw new InvalidArgumentException(
         'id',

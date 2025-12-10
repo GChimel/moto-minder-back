@@ -96,7 +96,6 @@ describe('User Entity', () => {
       const user = await User.create({
         name: 'John Doe',
         email: 'john@example.com',
-
       });
 
       expect(user.getPassword()).toBeUndefined();

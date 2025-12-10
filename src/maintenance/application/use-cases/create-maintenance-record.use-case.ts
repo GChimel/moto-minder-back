@@ -16,7 +16,6 @@ export class CreateMaintenanceRecordUseCase {
   ) {}
 
   async execute(dto: CreateMaintenanceRecordDto): Promise<MaintenanceRecord> {
-
     if (!dto.userMotocycleId || dto.userMotocycleId.trim() === '') {
       throw new InvalidArgumentException(
         'userMotocycleId',

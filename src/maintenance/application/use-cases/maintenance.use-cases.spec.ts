@@ -1,4 +1,4 @@
-
+/* eslint-disable @typescript-eslint/unbound-method */
 import { CreateMaintenanceRecordUseCase } from './create-maintenance-record.use-case';
 import { FindMaintenanceByMotorcycleUseCase } from './find-maintenance-by-motorcycle.use-case';
 import { FindUpcomingMaintenanceUseCase } from './find-upcoming-maintenance.use-case';

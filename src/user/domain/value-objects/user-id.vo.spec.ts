@@ -1,4 +1,4 @@
-
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
 import { UserId } from './user-id.vo';
 
 describe('UserId Value Object', () => {
