@@ -32,9 +32,15 @@ export class GarminOAuthAdapter implements IOAuthProvider {
     'https://apis.garmin.com/userprofile-service/userprofile/v2/socialProfile';
 
   constructor(private configService: ConfigService) {
-    this.clientId = this.configService.get<string>('GARMIN_CLIENT_ID');
-    this.clientSecret = this.configService.get<string>('GARMIN_CLIENT_SECRET');
-    this.redirectUri = this.configService.get<string>('GARMIN_REDIRECT_URI');
+    this.clientId = this.configService.get<string>(
+      'GARMIN_CLIENT_ID',
+    ) as string;
+    this.clientSecret = this.configService.get<string>(
+      'GARMIN_CLIENT_SECRET',
+    ) as string;
+    this.redirectUri = this.configService.get<string>(
+      'GARMIN_REDIRECT_URI',
+    ) as string;
 
     if (!this.clientId || !this.clientSecret || !this.redirectUri) {
       throw new Error('Missing Garmin OAuth configuration');
@@ -56,7 +62,7 @@ export class GarminOAuthAdapter implements IOAuthProvider {
         avatar: userInfo.profileImageUrl,
         provider: 'garmin',
       };
-    } catch (error) {
+    } catch {
       throw new BadRequestException('Failed to get Garmin OAuth profile');
     }
   }
@@ -82,7 +88,7 @@ export class GarminOAuthAdapter implements IOAuthProvider {
         refreshToken: response.data.refresh_token,
         expiresIn: response.data.expires_in,
       };
-    } catch (error) {
+    } catch {
       throw new BadRequestException('Failed to refresh Garmin OAuth token');
     }
   }

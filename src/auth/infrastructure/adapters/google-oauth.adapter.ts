@@ -31,9 +31,15 @@ export class GoogleOAuthAdapter implements IOAuthProvider {
     'https://www.googleapis.com/oauth2/v2/userinfo';
 
   constructor(private configService: ConfigService) {
-    this.clientId = this.configService.get<string>('GOOGLE_CLIENT_ID');
-    this.clientSecret = this.configService.get<string>('GOOGLE_CLIENT_SECRET');
-    this.redirectUri = this.configService.get<string>('GOOGLE_REDIRECT_URI');
+    this.clientId = this.configService.get<string>(
+      'GOOGLE_CLIENT_ID',
+    ) as string;
+    this.clientSecret = this.configService.get<string>(
+      'GOOGLE_CLIENT_SECRET',
+    ) as string;
+    this.redirectUri = this.configService.get<string>(
+      'GOOGLE_REDIRECT_URI',
+    ) as string;
 
     if (!this.clientId || !this.clientSecret || !this.redirectUri) {
       throw new Error('Missing Google OAuth configuration');
@@ -55,7 +61,7 @@ export class GoogleOAuthAdapter implements IOAuthProvider {
         avatar: userInfo.picture,
         provider: 'google',
       };
-    } catch (error) {
+    } catch {
       throw new BadRequestException('Failed to get Google OAuth profile');
     }
   }
@@ -74,7 +80,7 @@ export class GoogleOAuthAdapter implements IOAuthProvider {
         refreshToken: response.data.refresh_token,
         expiresIn: response.data.expires_in,
       };
-    } catch (error) {
+    } catch {
       throw new BadRequestException('Failed to refresh Google OAuth token');
     }
   }

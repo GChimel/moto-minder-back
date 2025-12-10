@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/unbound-method, @typescript-eslint/no-unsafe-assignment */
 import { BadRequestException } from '@nestjs/common';
 import { OAuthLoginUseCase, OAuthLoginDto } from './oauth-login.use-case';
 import { IOAuthProvider, OAuthProfile } from '../ports/oauth-provider.port';
@@ -17,12 +18,12 @@ describe('OAuthLoginUseCase', () => {
     googleOAuthProvider = {
       getProfile: jest.fn(),
       refreshToken: jest.fn(),
-    };
+    } as unknown as jest.Mocked<IOAuthProvider>;
 
     garminOAuthProvider = {
       getProfile: jest.fn(),
       refreshToken: jest.fn(),
-    };
+    } as unknown as jest.Mocked<IOAuthProvider>;
 
     // Create mock repositories
     userRepository = {
@@ -31,12 +32,12 @@ describe('OAuthLoginUseCase', () => {
       findByEmail: jest.fn(),
       findAll: jest.fn(),
       delete: jest.fn(),
-    };
+    } as unknown as jest.Mocked<UserRepositoryPort>;
 
     // Create mock token generator
     authTokenGenerator = {
       generate: jest.fn(),
-    };
+    } as unknown as jest.Mocked<IAuthTokenGenerator>;
 
     // Create use case with mocked dependencies
     useCase = new OAuthLoginUseCase(
@@ -380,8 +381,6 @@ describe('OAuthLoginUseCase', () => {
         avatar: 'avatar.jpg',
         provider: 'google',
       };
-
-      const expectedPassword = `oauth_${mockProfile.provider}_${mockProfile.id}`;
 
       googleOAuthProvider.getProfile.mockResolvedValue(mockProfile);
       userRepository.findByEmail.mockResolvedValue(null);

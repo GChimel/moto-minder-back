@@ -8,10 +8,8 @@ import {
 } from 'typeorm';
 
 @Entity('user_motocycles')
-@Index(['userId'], { name: 'idx_user_motocycles_user_id' })
-@Index(['motocycleModelId'], {
-  name: 'idx_user_motocycles_motorcycle_model_id',
-})
+@Index('idx_user_motocycles_user_id', ['userId'])
+@Index('idx_user_motocycles_motorcycle_model_id', ['motocycleModelId'])
 export class UserMotocycleSchema {
   @PrimaryColumn('uuid')
   id: string;
