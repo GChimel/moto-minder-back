@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment */
 import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import * as request from 'supertest';
@@ -7,13 +6,11 @@ import { User } from '../src/user/domain/entities/user.entity';
 import { MotocycleModel } from '../src/motocycle-model/domain/entities/motocycle-model.entity';
 import { UserRepositoryPort } from '../src/user/application/ports/user.repository.port';
 import { MotocycleModelRepositoryPort } from '../src/motocycle-model/application/ports/motocycle-model.repository.port';
-import { UserMotocycleRepositoryPort } from '../src/user-motocycle/application/ports/user-motocycle.repository.port';
 
 describe('UserMotocycle API (e2e)', () => {
   let app: INestApplication;
   let userRepository: UserRepositoryPort;
   let motocycleModelRepository: MotocycleModelRepositoryPort;
-  let userMotocycleRepository: UserMotocycleRepositoryPort;
   let testUser: User;
   let testMotocycleModel: MotocycleModel;
   let jwtToken: string;
@@ -27,18 +24,13 @@ describe('UserMotocycle API (e2e)', () => {
     app.useGlobalPipes(new ValidationPipe());
     await app.init();
 
-    // Get repository instances
     userRepository = moduleFixture.get<UserRepositoryPort>('USER_REPOSITORY');
     motocycleModelRepository = moduleFixture.get<MotocycleModelRepositoryPort>(
       'MOTOCYCLE_MODEL_REPOSITORY',
     );
-    userMotocycleRepository = moduleFixture.get<UserMotocycleRepositoryPort>(
-      'USER_MOTOCYCLE_REPOSITORY',
-    );
   });
 
   beforeEach(async () => {
-    // Create test user
     testUser = await User.create({
       name: 'Test User',
       email: `test_${Date.now()}@example.com`,
@@ -46,7 +38,6 @@ describe('UserMotocycle API (e2e)', () => {
     });
     await userRepository.save(testUser);
 
-    // Create test motorcycle model
     testMotocycleModel = MotocycleModel.create({
       manufacturerId: '550e8400-e29b-41d4-a716-446655440000',
       name: 'Harley-Davidson Street 750',
@@ -71,7 +62,6 @@ describe('UserMotocycle API (e2e)', () => {
     });
     await motocycleModelRepository.save(testMotocycleModel);
 
-    // Login to get JWT token
     const loginResponse = await request(app.getHttpServer())
       .post('/auth/login')
       .send({
@@ -138,7 +128,7 @@ describe('UserMotocycle API (e2e)', () => {
         .send({
           motocycleModelId: testMotocycleModel.getId().getValue(),
           nickname: 'My Harley',
-          manufacturingYear: 2025, // Outside model range (2014-2024)
+          manufacturingYear: 2025,
           currentOdometer: 5000,
         });
 
@@ -150,7 +140,6 @@ describe('UserMotocycle API (e2e)', () => {
         .post('/user-motocycles')
         .set('Authorization', `Bearer ${jwtToken}`)
         .send({
-          // Missing motocycleModelId
           nickname: 'My Harley',
           manufacturingYear: 2020,
           currentOdometer: 5000,
@@ -165,7 +154,7 @@ describe('UserMotocycle API (e2e)', () => {
         .set('Authorization', `Bearer ${jwtToken}`)
         .send({
           motocycleModelId: testMotocycleModel.getId().getValue(),
-          nickname: 'A', // Too short
+          nickname: 'A',
           manufacturingYear: 2020,
           currentOdometer: 5000,
         });
@@ -177,7 +166,7 @@ describe('UserMotocycle API (e2e)', () => {
         .set('Authorization', `Bearer ${jwtToken}`)
         .send({
           motocycleModelId: testMotocycleModel.getId().getValue(),
-          nickname: 'a'.repeat(101), // Too long
+          nickname: 'a'.repeat(101),
           manufacturingYear: 2020,
           currentOdometer: 5000,
         });
@@ -193,7 +182,7 @@ describe('UserMotocycle API (e2e)', () => {
           motocycleModelId: testMotocycleModel.getId().getValue(),
           nickname: 'My Harley',
           manufacturingYear: 2020,
-          currentOdometer: -100, // Negative odometer
+          currentOdometer: -100,
         });
 
       expect(response.status).toBe(400);
@@ -202,7 +191,6 @@ describe('UserMotocycle API (e2e)', () => {
 
   describe('GET /user-motocycles/me', () => {
     it('should return user motorcycles for authenticated user', async () => {
-      // Create a motorcycle first
       await request(app.getHttpServer())
         .post('/user-motocycles')
         .set('Authorization', `Bearer ${jwtToken}`)
@@ -259,7 +247,6 @@ describe('UserMotocycle API (e2e)', () => {
 
   describe('GET /user-motocycles/:id', () => {
     it('should return a specific user motorcycle', async () => {
-      // Create a motorcycle first
       const createResponse = await request(app.getHttpServer())
         .post('/user-motocycles')
         .set('Authorization', `Bearer ${jwtToken}`)
@@ -300,7 +287,6 @@ describe('UserMotocycle API (e2e)', () => {
 
   describe('PATCH /user-motocycles/:id', () => {
     it('should update motorcycle nickname', async () => {
-      // Create a motorcycle first
       const createResponse = await request(app.getHttpServer())
         .post('/user-motocycles')
         .set('Authorization', `Bearer ${jwtToken}`)
@@ -325,7 +311,6 @@ describe('UserMotocycle API (e2e)', () => {
     });
 
     it('should update motorcycle odometer', async () => {
-      // Create a motorcycle first
       const createResponse = await request(app.getHttpServer())
         .post('/user-motocycles')
         .set('Authorization', `Bearer ${jwtToken}`)
@@ -350,7 +335,6 @@ describe('UserMotocycle API (e2e)', () => {
     });
 
     it('should update manufacturing year', async () => {
-      // Create a motorcycle first
       const createResponse = await request(app.getHttpServer())
         .post('/user-motocycles')
         .set('Authorization', `Bearer ${jwtToken}`)
@@ -375,7 +359,6 @@ describe('UserMotocycle API (e2e)', () => {
     });
 
     it('should update multiple fields at once', async () => {
-      // Create a motorcycle first
       const createResponse = await request(app.getHttpServer())
         .post('/user-motocycles')
         .set('Authorization', `Bearer ${jwtToken}`)
@@ -425,7 +408,6 @@ describe('UserMotocycle API (e2e)', () => {
     });
 
     it('should reject invalid manufacturing year', async () => {
-      // Create a motorcycle first
       const createResponse = await request(app.getHttpServer())
         .post('/user-motocycles')
         .set('Authorization', `Bearer ${jwtToken}`)
@@ -442,14 +424,13 @@ describe('UserMotocycle API (e2e)', () => {
         .patch(`/user-motocycles/${motorcycleId}`)
         .set('Authorization', `Bearer ${jwtToken}`)
         .send({
-          manufacturingYear: 2025, // Outside model range
+          manufacturingYear: 2025,
         });
 
       expect(response.status).toBe(400);
     });
 
     it('should reject decreasing odometer', async () => {
-      // Create a motorcycle first
       const createResponse = await request(app.getHttpServer())
         .post('/user-motocycles')
         .set('Authorization', `Bearer ${jwtToken}`)
@@ -466,7 +447,7 @@ describe('UserMotocycle API (e2e)', () => {
         .patch(`/user-motocycles/${motorcycleId}`)
         .set('Authorization', `Bearer ${jwtToken}`)
         .send({
-          currentOdometer: 4000, // Decrease
+          currentOdometer: 4000,
         });
 
       expect(response.status).toBe(400);
@@ -475,7 +456,6 @@ describe('UserMotocycle API (e2e)', () => {
 
   describe('DELETE /user-motocycles/:id', () => {
     it('should delete a user motorcycle', async () => {
-      // Create a motorcycle first
       const createResponse = await request(app.getHttpServer())
         .post('/user-motocycles')
         .set('Authorization', `Bearer ${jwtToken}`)
@@ -494,7 +474,6 @@ describe('UserMotocycle API (e2e)', () => {
 
       expect(response.status).toBe(200);
 
-      // Verify it was deleted
       const getResponse = await request(app.getHttpServer())
         .get(`/user-motocycles/${motorcycleId}`)
         .set('Authorization', `Bearer ${jwtToken}`);
@@ -521,7 +500,6 @@ describe('UserMotocycle API (e2e)', () => {
 
   describe('Complete CRUD workflow', () => {
     it('should execute full lifecycle: create, read, update, delete', async () => {
-      // Create
       const createResponse = await request(app.getHttpServer())
         .post('/user-motocycles')
         .set('Authorization', `Bearer ${jwtToken}`)
@@ -535,7 +513,6 @@ describe('UserMotocycle API (e2e)', () => {
       expect(createResponse.status).toBe(201);
       const motorcycleId = createResponse.body.id;
 
-      // Read
       const readResponse = await request(app.getHttpServer())
         .get(`/user-motocycles/${motorcycleId}`)
         .set('Authorization', `Bearer ${jwtToken}`);
@@ -543,7 +520,6 @@ describe('UserMotocycle API (e2e)', () => {
       expect(readResponse.status).toBe(200);
       expect(readResponse.body.nickname).toBe('My Harley');
 
-      // Update
       const updateResponse = await request(app.getHttpServer())
         .patch(`/user-motocycles/${motorcycleId}`)
         .set('Authorization', `Bearer ${jwtToken}`)
@@ -556,14 +532,12 @@ describe('UserMotocycle API (e2e)', () => {
       expect(updateResponse.body.nickname).toBe('Updated Harley');
       expect(updateResponse.body.currentOdometer).toBe(6000);
 
-      // Delete
       const deleteResponse = await request(app.getHttpServer())
         .delete(`/user-motocycles/${motorcycleId}`)
         .set('Authorization', `Bearer ${jwtToken}`);
 
       expect(deleteResponse.status).toBe(200);
 
-      // Verify deletion
       const verifyResponse = await request(app.getHttpServer())
         .get(`/user-motocycles/${motorcycleId}`)
         .set('Authorization', `Bearer ${jwtToken}`);

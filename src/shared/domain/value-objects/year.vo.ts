@@ -9,7 +9,7 @@ export class Year {
 
   private validate(year: number): void {
     const currentYear = new Date().getFullYear();
-    const maxYear = currentYear + 1; // Allow next year for upcoming models
+    const maxYear = currentYear + 1;
 
     if (year < Year.MIN_YEAR) {
       throw new Error(`Year cannot be before ${Year.MIN_YEAR}`);

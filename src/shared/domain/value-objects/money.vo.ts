@@ -5,7 +5,7 @@ export class Money {
   constructor(amount: number, currency: string = 'USD') {
     this.validateAmount(amount);
     this.validateCurrency(currency);
-    this.amount = Math.round(amount * 100) / 100; // Round to 2 decimal places
+    this.amount = Math.round(amount * 100) / 100;
     this.currency = currency.toUpperCase();
   }
 

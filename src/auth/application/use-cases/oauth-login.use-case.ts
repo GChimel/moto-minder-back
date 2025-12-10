@@ -33,26 +33,22 @@ export class OAuthLoginUseCase {
   ) {}
 
   async execute(dto: OAuthLoginDto): Promise<{ token: string; user: User }> {
-    // Get OAuth provider based on provider name
+
     const oauthProvider = this.getOAuthProvider(dto.provider);
 
-    // Get user profile from OAuth provider
     const profile = await oauthProvider.getProfile(dto.code);
 
-    // Check if user already exists
     let user = await this.userRepository.findByEmail(profile.email);
 
-    // If user doesn't exist, create new user
     if (!user) {
       user = await User.create({
         name: profile.name,
         email: profile.email,
-        password: `oauth_${profile.provider}_${profile.id}`, // OAuth users have synthetic password
+        password: `oauth_${profile.provider}_${profile.id}`,
       });
       user = await this.userRepository.save(user);
     }
 
-    // Generate JWT token
     const token = await this.authTokenGenerator.generate({
       sub: user.getId().getValue(),
     });

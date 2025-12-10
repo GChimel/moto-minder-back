@@ -1,7 +1,8 @@
-import { Injectable } from '@nestjs/common';
-import { Inject } from '@nestjs/common';
-import { Ride } from '../../domain/entities/ride.entity';
-import { RIDE_REPOSITORY, RideRepositoryPort } from '../ports/ride.repository.port';
+import { Injectable, Inject } from '@nestjs/common';
+import {
+  RIDE_REPOSITORY,
+  RideRepositoryPort,
+} from '../ports/ride.repository.port';
 import { RideStatus } from '../../domain/enums/ride-status.enum';
 import { InvalidArgumentException } from '../../../shared/domain/exceptions/invalid-argument.exception';
 
@@ -16,7 +17,7 @@ export interface RideStatisticsDto {
   averageFuelEconomy?: number;
   averageSpeed?: number;
   longestRideDistance?: number;
-  totalDuration: number; // in minutes
+  totalDuration: number;
 }
 
 @Injectable()
@@ -27,7 +28,7 @@ export class GetRideStatisticsUseCase {
   ) {}
 
   async execute(userMotocycleId: string): Promise<RideStatisticsDto> {
-    // Validate that userMotocycleId is provided
+
     if (!userMotocycleId || userMotocycleId.trim() === '') {
       throw new InvalidArgumentException(
         'userMotocycleId',
@@ -35,10 +36,8 @@ export class GetRideStatisticsUseCase {
       );
     }
 
-    // Get all rides for the motorcycle
     const rides = await this.repository.findByUserMotocycleId(userMotocycleId);
 
-    // Calculate statistics
     let totalDistance = 0;
     let totalFuelConsumed = 0;
     let totalDuration = 0;
@@ -51,7 +50,9 @@ export class GetRideStatisticsUseCase {
     const completedRides = rides.filter(
       (r) => r.getStatus() === RideStatus.COMPLETED,
     );
-    const activeRides = rides.filter((r) => r.getStatus() === RideStatus.ACTIVE);
+    const activeRides = rides.filter(
+      (r) => r.getStatus() === RideStatus.ACTIVE,
+    );
     const cancelledRides = rides.filter(
       (r) => r.getStatus() === RideStatus.CANCELLED,
     );
@@ -96,11 +97,13 @@ export class GetRideStatisticsUseCase {
       activeRides: activeRides.length,
       cancelledRides: cancelledRides.length,
       totalDistance,
-      totalFuelConsumed: completedRides.length > 0 ? totalFuelConsumed : undefined,
+      totalFuelConsumed:
+        completedRides.length > 0 ? totalFuelConsumed : undefined,
       averageFuelEconomy:
         fuelEconomyCount > 0 ? fuelEconomySum / fuelEconomyCount : undefined,
       averageSpeed: speedCount > 0 ? speedSum / speedCount : undefined,
-      longestRideDistance: completedRides.length > 0 ? longestRideDistance : undefined,
+      longestRideDistance:
+        completedRides.length > 0 ? longestRideDistance : undefined,
       totalDuration,
     };
   }

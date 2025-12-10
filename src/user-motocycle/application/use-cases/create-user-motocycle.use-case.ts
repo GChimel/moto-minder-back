@@ -32,13 +32,12 @@ export class CreateUserMotocycleUseCase {
   ) {}
 
   async execute(dto: CreateUserMotocycleDto): Promise<UserMotocycle> {
-    // Validate user exists
+
     const user = await this.userRepository.findById(dto.userId);
     if (!user) {
       throw new EntityNotFoundException('User', dto.userId);
     }
 
-    // Validate motorcycle model exists
     const motocycleModel = await this.motocycleModelRepository.findById(
       dto.motocycleModelId,
     );
@@ -46,7 +45,6 @@ export class CreateUserMotocycleUseCase {
       throw new EntityNotFoundException('MotocycleModel', dto.motocycleModelId);
     }
 
-    // Validate manufacturing year is within model's production range
     const modelYearStart = motocycleModel.getYearStart();
     const modelYearEnd = motocycleModel.getYearEnd();
 
@@ -59,7 +57,6 @@ export class CreateUserMotocycleUseCase {
       );
     }
 
-    // Create and save user motorcycle
     const userMotocycle = UserMotocycle.create(dto);
     return this.userMotocycleRepository.save(userMotocycle);
   }

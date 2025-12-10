@@ -53,13 +53,13 @@ describe('UserMotocycle Entity', () => {
       expect(() =>
         UserMotocycle.create({
           ...validInput,
-          nickname: 'A', // Less than 2 chars
+          nickname: 'A',
         }),
       ).toThrow();
     });
 
     it('should reject nickname that is too long', () => {
-      const longNickname = 'a'.repeat(101); // More than 100 chars
+      const longNickname = 'a'.repeat(101);
       expect(() =>
         UserMotocycle.create({
           ...validInput,
@@ -81,7 +81,7 @@ describe('UserMotocycle Entity', () => {
       expect(() =>
         UserMotocycle.create({
           ...validInput,
-          currentOdometer: 1000001, // Over 1 million km
+          currentOdometer: 1000001,
         }),
       ).toThrow();
     });
@@ -276,7 +276,7 @@ describe('UserMotocycle Entity', () => {
       expect(() =>
         UserMotocycle.create({
           ...validInput,
-          nickname: '', // Empty string
+          nickname: '',
         }),
       ).toThrow();
     });
@@ -285,7 +285,7 @@ describe('UserMotocycle Entity', () => {
       expect(() =>
         UserMotocycle.create({
           ...validInput,
-          currentOdometer: 1000001, // Over max
+          currentOdometer: 1000001,
         }),
       ).toThrow();
     });
@@ -294,7 +294,7 @@ describe('UserMotocycle Entity', () => {
       expect(() =>
         UserMotocycle.create({
           ...validInput,
-          manufacturingYear: 2050, // Too far in future
+          manufacturingYear: 2050,
         }),
       ).toThrow();
     });

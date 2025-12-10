@@ -20,7 +20,7 @@ export class FindMotocyclesByUserUseCase {
   ) {}
 
   async execute(userId: string): Promise<UserMotocycle[]> {
-    // Validate user exists
+
     const user = await this.userRepository.findById(userId);
     if (!user) {
       throw new EntityNotFoundException('User', userId);

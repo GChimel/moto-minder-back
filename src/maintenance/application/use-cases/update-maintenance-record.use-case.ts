@@ -27,7 +27,7 @@ export class UpdateMaintenanceRecordUseCase {
     id: string,
     updateDto: UpdateMaintenanceRecordDto,
   ): Promise<MaintenanceRecord> {
-    // Validate that id is provided
+
     if (!id || id.trim() === '') {
       throw new InvalidArgumentException(
         'id',
@@ -35,28 +35,23 @@ export class UpdateMaintenanceRecordUseCase {
       );
     }
 
-    // Find the existing record
     const record = await this.repository.findById(id);
     if (!record) {
       throw new MaintenanceRecordNotFoundException(id);
     }
 
-    // Update cost if provided
     if (updateDto.cost !== undefined) {
       record.updateCost(updateDto.cost);
     }
 
-    // Update notes if provided
     if (updateDto.notes !== undefined) {
       record.updateNotes(updateDto.notes);
     }
 
-    // Update parts used if provided
     if (updateDto.partsUsed !== undefined) {
       record.updatePartsUsed(updateDto.partsUsed);
     }
 
-    // Update next service interval if provided
     if (updateDto.nextServiceInterval !== undefined) {
       const nextServiceInterval = updateDto.nextServiceInterval
         ? new ServiceInterval(updateDto.nextServiceInterval)
@@ -64,7 +59,6 @@ export class UpdateMaintenanceRecordUseCase {
       record.updateNextServiceInterval(nextServiceInterval);
     }
 
-    // Persist updated record
     return this.repository.save(record);
   }
 }

@@ -15,7 +15,7 @@ export class DeleteMaintenanceRecordUseCase {
   ) {}
 
   async execute(id: string): Promise<void> {
-    // Validate that id is provided
+
     if (!id || id.trim() === '') {
       throw new InvalidArgumentException(
         'id',
@@ -23,13 +23,11 @@ export class DeleteMaintenanceRecordUseCase {
       );
     }
 
-    // Check if the record exists
     const record = await this.repository.findById(id);
     if (!record) {
       throw new MaintenanceRecordNotFoundException(id);
     }
 
-    // Delete the record
     await this.repository.delete(id);
   }
 }

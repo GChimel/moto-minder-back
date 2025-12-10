@@ -1,5 +1,5 @@
 export class Odometer {
-  private static readonly MAX_ODOMETER = 1000000; // 1 million km is reasonable max
+  private static readonly MAX_ODOMETER = 1000000;
   private readonly value: number;
 
   constructor(odometer: number) {

@@ -8,9 +8,9 @@ import {
 } from 'typeorm';
 
 @Entity('rides')
-@Index('idx_user_motocycle_id', ['userMotocycleId'])
-@Index('idx_start_date', ['startDate'])
-@Index('idx_status', ['status'])
+@Index('idx_rides_user_motocycle_id', ['userMotocycleId'])
+@Index('idx_rides_start_date', ['startDate'])
+@Index('idx_rides_status', ['status'])
 export class RideSchema {
   @PrimaryColumn('uuid')
   id: string;

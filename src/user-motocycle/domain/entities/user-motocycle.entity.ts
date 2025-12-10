@@ -68,7 +68,6 @@ export class UserMotocycle {
     );
   }
 
-  // Getters
   getId(): IdVO {
     return this.id;
   }
@@ -105,7 +104,6 @@ export class UserMotocycle {
     return this.specificationsOverride;
   }
 
-  // Update methods
   updateNickname(nickname: string): void {
     this.nickname = new Nickname(nickname);
     this.updatedAt = new Date();

@@ -15,7 +15,7 @@ export class FindMaintenanceByMotorcycleUseCase {
   ) {}
 
   async execute(userMotocycleId: string): Promise<MaintenanceRecord[]> {
-    // Validate that userMotocycleId is provided
+
     if (!userMotocycleId || userMotocycleId.trim() === '') {
       throw new InvalidArgumentException(
         'userMotocycleId',
@@ -23,11 +23,9 @@ export class FindMaintenanceByMotorcycleUseCase {
       );
     }
 
-    // Find all maintenance records for the motorcycle
     const records =
       await this.repository.findByUserMotocycleId(userMotocycleId);
 
-    // Sort by performedAt in descending order (newest first)
     return records.sort(
       (a, b) =>
         new Date(b.getPerformedAt()).getTime() -

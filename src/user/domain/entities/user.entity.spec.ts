@@ -96,7 +96,7 @@ describe('User Entity', () => {
       const user = await User.create({
         name: 'John Doe',
         email: 'john@example.com',
-        // password is optional
+
       });
 
       expect(user.getPassword()).toBeUndefined();
@@ -216,19 +216,16 @@ describe('User Entity', () => {
       const user = await User.create(validInput);
       const accountAge = user.getAccoutAge();
 
-      expect(accountAge).toBeLessThanOrEqual(1); // Just created (may be 0 or 1 depending on timing)
+      expect(accountAge).toBeLessThanOrEqual(1);
       expect(typeof accountAge).toBe('number');
     });
 
     it('should return correct age for older accounts', async () => {
       const user = await User.create(validInput);
 
-      // Manually set createdAt to 10 days ago
       const tenDaysAgo = new Date();
       tenDaysAgo.setDate(tenDaysAgo.getDate() - 10);
 
-      // This would normally be tested via reconstitute or by mocking Date
-      // For now, we verify the calculation logic exists
       expect(typeof user.getAccoutAge()).toBe('number');
     });
   });
@@ -247,11 +244,9 @@ describe('User Entity', () => {
       const user1 = await User.create(validInput);
       const user2 = await User.create(validInput);
 
-      // Both should have hashed passwords
       expect(user1.getPassword()).toBeDefined();
       expect(user2.getPassword()).toBeDefined();
 
-      // Hash values should be different (salt)
       expect(user1.getPassword()).not.toBe(user2.getPassword());
     });
   });
@@ -260,7 +255,6 @@ describe('User Entity', () => {
     it('should support finding users by email', async () => {
       const user = await User.create(validInput);
 
-      // In real usage, repository would find by email
       expect(user.getEmail().getValue()).toBe(validInput.email);
     });
   });

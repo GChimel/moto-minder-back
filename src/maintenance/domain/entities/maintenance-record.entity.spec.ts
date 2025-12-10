@@ -477,8 +477,6 @@ describe('MaintenanceRecord Entity', () => {
       };
       const record = MaintenanceRecord.create(dto);
 
-      // ID is private and readonly, so this should fail at compile time
-      // This test is more of a type-checking assertion
       expect(record.getId()).toBeDefined();
     });
   });

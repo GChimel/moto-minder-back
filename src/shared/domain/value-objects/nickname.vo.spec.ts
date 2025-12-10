@@ -73,7 +73,6 @@ describe('Nickname Value Object', () => {
       const nickname = new Nickname('My Harley');
       const originalValue = nickname.getValue();
 
-      // Try to modify (should fail in strict mode)
       expect(nickname.getValue()).toBe(originalValue);
     });
   });

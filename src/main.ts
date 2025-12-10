@@ -9,10 +9,8 @@ import { AllExceptionsFilter } from './shared/presentation/filters/all-exception
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  // Global exception filters
   app.useGlobalFilters(new AllExceptionsFilter(), new HttpExceptionFilter());
 
-  // Global validation pipe
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
@@ -24,7 +22,6 @@ async function bootstrap() {
     }),
   );
 
-  // Swagger API Documentation
   const document = SwaggerModule.createDocument(app, swaggerConfig);
   SwaggerModule.setup('api/docs', app, document, {
     swaggerOptions: {
@@ -40,4 +37,4 @@ async function bootstrap() {
     `Swagger docs available at: http://localhost:${process.env.PORT ?? 3000}/api/docs`,
   );
 }
-bootstrap();
+void bootstrap();

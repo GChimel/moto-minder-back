@@ -9,15 +9,15 @@ export class CreateRidesTable1765300000000 implements MigrationInterface {
     );
 
     await queryRunner.query(
-      `CREATE INDEX "idx_user_motocycle_id" ON "rides" ("userMotocycleId")`,
+      `CREATE INDEX "idx_rides_user_motocycle_id" ON "rides" ("userMotocycleId")`,
     );
 
     await queryRunner.query(
-      `CREATE INDEX "idx_start_date" ON "rides" ("startDate")`,
+      `CREATE INDEX "idx_rides_start_date" ON "rides" ("startDate")`,
     );
 
     await queryRunner.query(
-      `CREATE INDEX "idx_status" ON "rides" ("status")`,
+      `CREATE INDEX "idx_rides_status" ON "rides" ("status")`,
     );
 
     await queryRunner.query(
@@ -30,11 +30,11 @@ export class CreateRidesTable1765300000000 implements MigrationInterface {
       `ALTER TABLE "rides" DROP CONSTRAINT "FK_rides_user_motocycle_id"`,
     );
 
-    await queryRunner.query(`DROP INDEX "idx_status"`);
+    await queryRunner.query(`DROP INDEX "idx_rides_status"`);
 
-    await queryRunner.query(`DROP INDEX "idx_start_date"`);
+    await queryRunner.query(`DROP INDEX "idx_rides_start_date"`);
 
-    await queryRunner.query(`DROP INDEX "idx_user_motocycle_id"`);
+    await queryRunner.query(`DROP INDEX "idx_rides_user_motocycle_id"`);
 
     await queryRunner.query(`DROP TABLE "rides"`);
   }

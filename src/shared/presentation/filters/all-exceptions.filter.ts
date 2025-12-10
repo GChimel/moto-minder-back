@@ -24,7 +24,6 @@ export class AllExceptionsFilter implements ExceptionFilter {
         ? exception.message
         : 'Internal server error';
 
-    // Log the full exception in development
     if (process.env.NODE_ENV === 'development') {
       console.error('Exception caught:', exception);
     }

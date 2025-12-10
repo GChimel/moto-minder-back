@@ -1,3 +1,4 @@
+
 import { UserPassword } from './user-password.vo';
 import { InvalidArgumentException } from '../../../shared/domain/exceptions/invalid-argument.exception';
 
@@ -39,15 +40,15 @@ describe('UserPassword Value Object', () => {
     });
 
     it('should reject password shorter than 8 characters', async () => {
-      expect(async () => {
-        await UserPassword.create('pass123');
-      }).rejects.toThrow(InvalidArgumentException);
+      await expect(UserPassword.create('pass123')).rejects.toThrow(
+        InvalidArgumentException,
+      );
     });
 
     it('should reject password with exactly 7 characters', async () => {
-      expect(async () => {
-        await UserPassword.create('passwor');
-      }).rejects.toThrow(InvalidArgumentException);
+      await expect(UserPassword.create('passwor')).rejects.toThrow(
+        InvalidArgumentException,
+      );
     });
 
     it('should accept password with exactly 8 characters', async () => {
@@ -92,14 +93,12 @@ describe('UserPassword Value Object', () => {
     it('should produce bcrypt-format hash', async () => {
       const userPassword = await UserPassword.create('securePassword123');
 
-      // Bcrypt hashes start with $2a$, $2b$, $2x$, or $2y$
       expect(userPassword?.hash).toMatch(/^\$2[aby]\$/);
     });
 
     it('should use cost factor of 10', async () => {
       const userPassword = await UserPassword.create('securePassword123');
 
-      // Bcrypt with cost 10 should have $2a$10$ format
       expect(userPassword?.hash).toMatch(/^\$2[aby]\$10\$/);
     });
   });
@@ -134,12 +133,11 @@ describe('UserPassword Value Object', () => {
       const mockUser = {
         getPassword: () =>
           '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcg7b3XeKeUxWdeS86E36P4/KFm',
-        // This is a bcrypt hash of 'securePassword123'
+
       };
 
       const result = await UserPassword.compare(password, mockUser as any);
 
-      // This test validates the compare method signature and behavior
       expect(typeof result).toBe('boolean');
     });
 
@@ -167,7 +165,7 @@ describe('UserPassword Value Object', () => {
     });
 
     it('should handle bcrypt comparison correctly', async () => {
-      // Create a password and verify it can be compared
+
       const plainPassword = 'testPassword123';
       const userPassword = await UserPassword.create(plainPassword);
 
@@ -254,7 +252,6 @@ describe('UserPassword Value Object', () => {
     it('should use bcrypt algorithm (salted)', async () => {
       const userPassword = await UserPassword.create('securePassword123');
 
-      // Bcrypt-hashed passwords always start with $2a$, $2b$, $2x$, or $2y$
       expect(userPassword?.hash).toMatch(/^\$2[abxy]\$/);
     });
 
@@ -263,10 +260,8 @@ describe('UserPassword Value Object', () => {
       const hash1 = (await UserPassword.create(password))?.hash;
       const hash2 = (await UserPassword.create(password))?.hash;
 
-      // Hashes should be different due to salt
       expect(hash1).not.toBe(hash2);
 
-      // Both should be valid bcrypt hashes
       expect(hash1).toMatch(/^\$2[abxy]\$/);
       expect(hash2).toMatch(/^\$2[abxy]\$/);
     });
@@ -275,7 +270,6 @@ describe('UserPassword Value Object', () => {
       const password = 'myPassword123';
       const userPassword = await UserPassword.create(password);
 
-      // The plain password should not appear in the hash
       expect(userPassword?.hash).not.toContain(password);
       expect(userPassword?.getValue()).not.toContain(password);
     });
@@ -283,7 +277,6 @@ describe('UserPassword Value Object', () => {
     it('should produce long hashes (bcrypt standard)', async () => {
       const userPassword = await UserPassword.create('securePassword123');
 
-      // Bcrypt hashes are 60 characters long
       expect(userPassword?.hash?.length).toBe(60);
     });
   });
@@ -355,11 +348,10 @@ describe('UserPassword Value Object', () => {
     });
 
     it('should verify password in authentication flow', async () => {
-      // Simulate user registration
+
       const plainPassword = 'MySecurePassword123';
       const storedPassword = await UserPassword.create(plainPassword);
 
-      // Simulate user login
       const mockUser = {
         getPassword: () => storedPassword?.hash,
       };

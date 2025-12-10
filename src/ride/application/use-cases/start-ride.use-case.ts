@@ -1,7 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { Inject } from '@nestjs/common';
 import { Ride } from '../../domain/entities/ride.entity';
-import { RIDE_REPOSITORY, RideRepositoryPort } from '../ports/ride.repository.port';
+import {
+  RIDE_REPOSITORY,
+  RideRepositoryPort,
+} from '../ports/ride.repository.port';
 import { CreateRideDto } from '../../domain/entities/ride.entity';
 import { InvalidArgumentException } from '../../../shared/domain/exceptions/invalid-argument.exception';
 
@@ -13,7 +16,7 @@ export class StartRideUseCase {
   ) {}
 
   async execute(dto: CreateRideDto): Promise<Ride> {
-    // Validate that userMotocycleId is provided
+
     if (!dto.userMotocycleId || dto.userMotocycleId.trim() === '') {
       throw new InvalidArgumentException(
         'userMotocycleId',
@@ -21,7 +24,6 @@ export class StartRideUseCase {
       );
     }
 
-    // Validate that startOdometer is non-negative
     if (dto.startOdometer < 0) {
       throw new InvalidArgumentException(
         'startOdometer',
@@ -29,10 +31,8 @@ export class StartRideUseCase {
       );
     }
 
-    // Create the ride entity
     const ride = Ride.create(dto);
 
-    // Persist to repository
     return this.repository.save(ride);
   }
 }

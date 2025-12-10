@@ -1,3 +1,4 @@
+
 import { ConflictException } from '@nestjs/common';
 import {
   CreateUserMotocycleUseCase,
@@ -22,7 +23,7 @@ describe('CreateUserMotocycleUseCase', () => {
   const mockManufacturerId = '770e8400-e29b-41d4-a716-446655440000';
 
   beforeEach(() => {
-    // Create mock repositories
+
     userMotocycleRepository = {
       save: jest.fn(),
       findById: jest.fn(),
@@ -48,7 +49,6 @@ describe('CreateUserMotocycleUseCase', () => {
       delete: jest.fn(),
     };
 
-    // Create use case with mocked dependencies
     useCase = new CreateUserMotocycleUseCase(
       userMotocycleRepository,
       userRepository,
@@ -66,7 +66,7 @@ describe('CreateUserMotocycleUseCase', () => {
     };
 
     it('should create a user motorcycle successfully', async () => {
-      // Arrange
+
       const mockUser = await User.create({
         name: 'John Doe',
         email: 'john@example.com',
@@ -102,10 +102,8 @@ describe('CreateUserMotocycleUseCase', () => {
       motocycleModelRepository.findById.mockResolvedValue(mockMotocycleModel);
       userMotocycleRepository.save.mockResolvedValue(expectedUserMotocycle);
 
-      // Act
       const result = await useCase.execute(validDto);
 
-      // Assert
       expect(result).toBeDefined();
       expect(result.getNickname().getValue()).toBe(validDto.nickname);
       expect(result.getCurrentOdometer().getValue()).toBe(
@@ -119,10 +117,9 @@ describe('CreateUserMotocycleUseCase', () => {
     });
 
     it('should throw EntityNotFoundException when user does not exist', async () => {
-      // Arrange
+
       userRepository.findById.mockResolvedValue(null);
 
-      // Act & Assert
       await expect(useCase.execute(validDto)).rejects.toThrow(
         EntityNotFoundException,
       );
@@ -131,7 +128,7 @@ describe('CreateUserMotocycleUseCase', () => {
     });
 
     it('should throw EntityNotFoundException when motorcycle model does not exist', async () => {
-      // Arrange
+
       const mockUser = await User.create({
         name: 'John Doe',
         email: 'john@example.com',
@@ -141,7 +138,6 @@ describe('CreateUserMotocycleUseCase', () => {
       userRepository.findById.mockResolvedValue(mockUser);
       motocycleModelRepository.findById.mockResolvedValue(null);
 
-      // Act & Assert
       await expect(useCase.execute(validDto)).rejects.toThrow(
         EntityNotFoundException,
       );
@@ -152,7 +148,7 @@ describe('CreateUserMotocycleUseCase', () => {
     });
 
     it('should throw ConflictException when manufacturing year is before model year start', async () => {
-      // Arrange
+
       const mockUser = await User.create({
         name: 'John Doe',
         email: 'john@example.com',
@@ -185,17 +181,16 @@ describe('CreateUserMotocycleUseCase', () => {
       userRepository.findById.mockResolvedValue(mockUser);
       motocycleModelRepository.findById.mockResolvedValue(mockMotocycleModel);
 
-      // Act & Assert
       await expect(
         useCase.execute({
           ...validDto,
-          manufacturingYear: 2013, // Before 2014
+          manufacturingYear: 2013,
         }),
       ).rejects.toThrow(ConflictException);
     });
 
     it('should throw ConflictException when manufacturing year is after model year end', async () => {
-      // Arrange
+
       const mockUser = await User.create({
         name: 'John Doe',
         email: 'john@example.com',
@@ -228,17 +223,16 @@ describe('CreateUserMotocycleUseCase', () => {
       userRepository.findById.mockResolvedValue(mockUser);
       motocycleModelRepository.findById.mockResolvedValue(mockMotocycleModel);
 
-      // Act & Assert
       await expect(
         useCase.execute({
           ...validDto,
-          manufacturingYear: 2025, // After 2024
+          manufacturingYear: 2025,
         }),
       ).rejects.toThrow(ConflictException);
     });
 
     it('should accept manufacturing year at model year start boundary', async () => {
-      // Arrange
+
       const mockUser = await User.create({
         name: 'John Doe',
         email: 'john@example.com',
@@ -277,19 +271,17 @@ describe('CreateUserMotocycleUseCase', () => {
       motocycleModelRepository.findById.mockResolvedValue(mockMotocycleModel);
       userMotocycleRepository.save.mockResolvedValue(expectedUserMotocycle);
 
-      // Act
       const result = await useCase.execute({
         ...validDto,
         manufacturingYear: 2014,
       });
 
-      // Assert
       expect(result).toBeDefined();
       expect(result.getManufacturingYear().getValue()).toBe(2014);
     });
 
     it('should accept manufacturing year at model year end boundary', async () => {
-      // Arrange
+
       const mockUser = await User.create({
         name: 'John Doe',
         email: 'john@example.com',
@@ -328,19 +320,17 @@ describe('CreateUserMotocycleUseCase', () => {
       motocycleModelRepository.findById.mockResolvedValue(mockMotocycleModel);
       userMotocycleRepository.save.mockResolvedValue(expectedUserMotocycle);
 
-      // Act
       const result = await useCase.execute({
         ...validDto,
         manufacturingYear: 2024,
       });
 
-      // Assert
       expect(result).toBeDefined();
       expect(result.getManufacturingYear().getValue()).toBe(2024);
     });
 
     it('should validate all three dependencies before creating motorcycle', async () => {
-      // Arrange
+
       const mockUser = await User.create({
         name: 'John Doe',
         email: 'john@example.com',
@@ -350,17 +340,15 @@ describe('CreateUserMotocycleUseCase', () => {
       userRepository.findById.mockResolvedValue(mockUser);
       motocycleModelRepository.findById.mockResolvedValue(null);
 
-      // Act & Assert - Should fail on second validation (model not found)
       await expect(useCase.execute(validDto)).rejects.toThrow(
         EntityNotFoundException,
       );
 
-      // Verify save was never called since validation failed
       expect(userMotocycleRepository.save).not.toHaveBeenCalled();
     });
 
     it('should handle multiple users creating motorcycles independently', async () => {
-      // Arrange
+
       const user1Id = '550e8400-e29b-41d4-a716-446655440001';
       const user2Id = '550e8400-e29b-41d4-a716-446655440002';
 
@@ -427,7 +415,6 @@ describe('CreateUserMotocycleUseCase', () => {
         Promise.resolve(moto),
       );
 
-      // Act
       const result1 = await useCase.execute({
         userId: user1Id,
         motocycleModelId: mockMotocycleModelId,
@@ -444,7 +431,6 @@ describe('CreateUserMotocycleUseCase', () => {
         currentOdometer: 3000,
       });
 
-      // Assert
       expect(result1).toBeDefined();
       expect(result2).toBeDefined();
       expect(result1.getNickname().getValue()).toBe('User 1 Harley');
@@ -454,7 +440,7 @@ describe('CreateUserMotocycleUseCase', () => {
 
   describe('repository interactions', () => {
     it('should call save with the created user motorcycle', async () => {
-      // Arrange
+
       const mockUser = await User.create({
         name: 'John Doe',
         email: 'john@example.com',
@@ -498,10 +484,8 @@ describe('CreateUserMotocycleUseCase', () => {
       motocycleModelRepository.findById.mockResolvedValue(mockMotocycleModel);
       userMotocycleRepository.save.mockResolvedValue(expectedUserMotocycle);
 
-      // Act
       await useCase.execute(validDto);
 
-      // Assert
       expect(userMotocycleRepository.save).toHaveBeenCalledTimes(1);
       expect(userMotocycleRepository.save).toHaveBeenCalledWith(
         expect.objectContaining({

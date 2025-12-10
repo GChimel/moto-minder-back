@@ -28,7 +28,6 @@ export class UpdateUserMotocycleUseCase {
       throw new EntityNotFoundException('UserMotocycle', id);
     }
 
-    // Update provided fields
     if (dto.nickname) {
       userMotocycle.updateNickname(dto.nickname);
     }

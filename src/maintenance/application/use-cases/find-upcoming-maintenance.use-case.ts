@@ -26,7 +26,7 @@ export class FindUpcomingMaintenanceUseCase {
     userMotocycleId: string,
     currentOdometer: number,
   ): Promise<UpcomingMaintenanceDto[]> {
-    // Validate inputs
+
     if (!userMotocycleId || userMotocycleId.trim() === '') {
       throw new InvalidArgumentException(
         'userMotocycleId',
@@ -41,11 +41,9 @@ export class FindUpcomingMaintenanceUseCase {
       );
     }
 
-    // Find all maintenance records for the motorcycle
     const records =
       await this.repository.findByUserMotocycleId(userMotocycleId);
 
-    // Filter records that have nextServiceInterval and calculate due dates
     const upcomingMaintenance: UpcomingMaintenanceDto[] = records
       .filter((record) => record.getNextServiceInterval() !== undefined)
       .map((record) => {
@@ -67,20 +65,18 @@ export class FindUpcomingMaintenanceUseCase {
           isOverdueByDate,
         };
       })
-      // Sort by urgency: overdue items first, then by closest due date
+
       .sort((a, b) => {
-        // Overdue items come first
+
         if (a.isOverdueByOdometer && !b.isOverdueByOdometer) return -1;
         if (!a.isOverdueByOdometer && b.isOverdueByOdometer) return 1;
         if (a.isOverdueByDate && !b.isOverdueByDate) return -1;
         if (!a.isOverdueByDate && b.isOverdueByDate) return 1;
 
-        // Then sort by closest due odometer
         if (a.nextServiceDueOdometer && b.nextServiceDueOdometer) {
           return a.nextServiceDueOdometer - b.nextServiceDueOdometer;
         }
 
-        // Then sort by closest due date
         const aDate = a.nextServiceDueDate || new Date(0);
         const bDate = b.nextServiceDueDate || new Date(0);
         return new Date(aDate).getTime() - new Date(bDate).getTime();

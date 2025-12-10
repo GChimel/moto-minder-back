@@ -90,7 +90,6 @@ describe('ServiceInterval Value Object', () => {
         const expectedDate = new Date();
         expectedDate.setMonth(expectedDate.getMonth() + 6);
 
-        // Check month is 6 months ahead
         expect(nextDue.getMonth()).toBe(expectedDate.getMonth());
         expect(nextDue.getFullYear()).toBe(expectedDate.getFullYear());
       }
@@ -104,42 +103,41 @@ describe('ServiceInterval Value Object', () => {
 
     it('should handle month rollover to next year', () => {
       const interval = new ServiceInterval({ intervalMonths: 6 });
-      const now = new Date(2024, 10, 15); // November 15, 2024
+      const now = new Date(2024, 10, 15);
 
-      // Mock the current date
       jest.useFakeTimers();
       jest.setSystemTime(now);
 
       const nextDue = interval.calculateNextServiceDueDate();
       expect(nextDue?.getFullYear()).toBe(2025);
-      expect(nextDue?.getMonth()).toBe(4); // May (11 + 6 = 17 % 12 = 5)
+      expect(nextDue?.getMonth()).toBe(4);
 
       jest.useRealTimers();
     });
 
     it('should handle 12-month interval', () => {
       const interval = new ServiceInterval({ intervalMonths: 12 });
-      const now = new Date(2024, 3, 10); // April 10, 2024
+      const now = new Date(2024, 3, 10);
 
       jest.useFakeTimers();
       jest.setSystemTime(now);
 
       const nextDue = interval.calculateNextServiceDueDate();
       expect(nextDue?.getFullYear()).toBe(2025);
-      expect(nextDue?.getMonth()).toBe(3); // April 2025
+      expect(nextDue?.getMonth()).toBe(3);
 
       jest.useRealTimers();
     });
 
     it('should handle 1-month interval', () => {
       const interval = new ServiceInterval({ intervalMonths: 1 });
-      const now = new Date(2024, 0, 15); // January 15, 2024
+      const now = new Date(2024, 0, 15);
 
       jest.useFakeTimers();
       jest.setSystemTime(now);
 
       const nextDue = interval.calculateNextServiceDueDate();
-      expect(nextDue?.getMonth()).toBe(1); // February
+      expect(nextDue?.getMonth()).toBe(1);
       expect(nextDue?.getFullYear()).toBe(2024);
 
       jest.useRealTimers();

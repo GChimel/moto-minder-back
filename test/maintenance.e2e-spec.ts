@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-argument */
+
 
 import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
@@ -62,7 +62,7 @@ describe('Maintenance E2E Tests', () => {
     });
 
     it('should create a motorcycle for the user', async () => {
-      // First get a motocycle model
+
       const modelsResponse = await request(app.getHttpServer())
         .get('/motocycle-models')
         .set('Authorization', `Bearer ${authToken}`)
@@ -182,7 +182,7 @@ describe('Maintenance E2E Tests', () => {
     });
 
     it('should return empty array for motorcycle with no maintenance', async () => {
-      // Create a new motorcycle without maintenance
+
       const modelsResponse = await request(app.getHttpServer())
         .get('/motocycle-models')
         .set('Authorization', `Bearer ${authToken}`)
@@ -214,7 +214,7 @@ describe('Maintenance E2E Tests', () => {
 
   describe('GET /maintenance/upcoming', () => {
     beforeAll(async () => {
-      // Create maintenance records with intervals for testing
+
       await request(app.getHttpServer())
         .post('/maintenance')
         .set('Authorization', `Bearer ${authToken}`)
@@ -251,13 +251,13 @@ describe('Maintenance E2E Tests', () => {
         .get('/maintenance/upcoming')
         .query({
           userMotocycleId,
-          currentOdometer: 26000, // Beyond all intervals
+          currentOdometer: 26000,
         })
         .set('Authorization', `Bearer ${authToken}`)
         .expect(200);
 
       expect(Array.isArray(response.body)).toBe(true);
-      // Some records should be marked as overdue
+
       const overdueRecords = response.body.filter(
         (item: { isOverdueByOdometer: boolean }) => item.isOverdueByOdometer,
       );
@@ -295,7 +295,7 @@ describe('Maintenance E2E Tests', () => {
     });
 
     it('should respect pagination parameters', async () => {
-      // Create multiple records first
+
       for (let i = 0; i < 5; i++) {
         await request(app.getHttpServer())
           .post('/maintenance')
@@ -421,7 +421,7 @@ describe('Maintenance E2E Tests', () => {
     });
 
     it('should confirm deletion', async () => {
-      // Verify record no longer exists
+
       const response = await request(app.getHttpServer())
         .get(`/maintenance/history/${userMotocycleId}`)
         .set('Authorization', `Bearer ${authToken}`)
@@ -455,7 +455,7 @@ describe('Maintenance E2E Tests', () => {
       await request(app.getHttpServer())
         .get(`/maintenance/motorcycle/${userMotocycleId}`)
         .set('Authorization', `Bearer ${otherUserToken}`)
-        .expect(200); // Gets empty list since other user has no motorcycles
+        .expect(200);
     });
   });
 });

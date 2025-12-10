@@ -125,7 +125,6 @@ export class MotocycleModel {
     );
   }
 
-  // Getters
   getId(): IdVO {
     return this.id;
   }
@@ -210,7 +209,6 @@ export class MotocycleModel {
     return this.coolantCapacityL;
   }
 
-  // Update methods
   updateName(name: string): void {
     this.name = new MotocycleModelName(name);
   }

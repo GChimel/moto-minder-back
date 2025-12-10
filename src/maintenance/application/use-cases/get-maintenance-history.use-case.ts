@@ -31,7 +31,7 @@ export class GetMaintenanceHistoryUseCase {
     userMotocycleId: string,
     pagination?: PaginationDto,
   ): Promise<MaintenanceHistoryResultDto> {
-    // Validate that userMotocycleId is provided
+
     if (!userMotocycleId || userMotocycleId.trim() === '') {
       throw new InvalidArgumentException(
         'userMotocycleId',
@@ -39,11 +39,9 @@ export class GetMaintenanceHistoryUseCase {
       );
     }
 
-    // Set default pagination values
     const skip = pagination?.skip ?? 0;
     const limit = pagination?.limit ?? 50;
 
-    // Validate pagination parameters
     if (skip < 0) {
       throw new InvalidArgumentException(
         'skip',
@@ -58,18 +56,15 @@ export class GetMaintenanceHistoryUseCase {
       );
     }
 
-    // Get all maintenance records for the motorcycle
     const allRecords =
       await this.repository.findByUserMotocycleId(userMotocycleId);
 
-    // Sort by performedAt in descending order (newest first)
     const sortedRecords = allRecords.sort(
       (a, b) =>
         new Date(b.getPerformedAt()).getTime() -
         new Date(a.getPerformedAt()).getTime(),
     );
 
-    // Apply pagination
     const records = sortedRecords.slice(skip, skip + limit);
     const total = sortedRecords.length;
     const hasMore = skip + limit < total;

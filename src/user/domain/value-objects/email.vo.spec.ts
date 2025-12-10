@@ -1,3 +1,4 @@
+
 import { Email } from './email.vo';
 
 describe('Email Value Object', () => {
@@ -86,8 +87,7 @@ describe('Email Value Object', () => {
     });
 
     it('should accept email with consecutive dots (regex allows)', () => {
-      // Note: The current regex validation allows this technically
-      // In production, you might want stricter RFC 5321 validation
+
       expect(() => new Email('user..name@example.com')).not.toThrow();
     });
 

@@ -3,7 +3,10 @@ import { RideStatus } from '../enums/ride-status.enum';
 import { Distance } from '../value-objects/distance.vo';
 import { FuelConsumed } from '../value-objects/fuel-consumed.vo';
 import { InvalidArgumentException } from '../../../shared/domain/exceptions/invalid-argument.exception';
-import { InvalidRideStateException, InvalidOdometerRangeException } from '../exceptions/ride-exceptions';
+import {
+  InvalidRideStateException,
+  InvalidOdometerRangeException,
+} from '../exceptions/ride-exceptions';
 
 export interface CreateRideDto {
   userMotocycleId: string;
@@ -208,7 +211,7 @@ export class Ride {
     if (!this.endDate) {
       return undefined;
     }
-    // Return duration in minutes
+
     return (this.endDate.getTime() - this.startDate.getTime()) / (1000 * 60);
   }
 
@@ -220,8 +223,7 @@ export class Ride {
       return undefined;
     }
 
-    // Calculate km/h
-    return (distance.getKilometers() / (duration / 60));
+    return distance.getKilometers() / (duration / 60);
   }
 
   private validateOdometer(odometer: number): void {

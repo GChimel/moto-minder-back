@@ -49,10 +49,9 @@ export class GarminOAuthAdapter implements IOAuthProvider {
 
   async getProfile(code: string): Promise<OAuthProfile> {
     try {
-      // Exchange authorization code for tokens
+
       const tokens = await this.exchangeCodeForTokens(code);
 
-      // Get user info using access token
       const userInfo = await this.getUserInfo(tokens.access_token);
 
       return {

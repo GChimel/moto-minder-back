@@ -1,3 +1,4 @@
+
 import { CreateMaintenanceRecordUseCase } from './create-maintenance-record.use-case';
 import { FindMaintenanceByMotorcycleUseCase } from './find-maintenance-by-motorcycle.use-case';
 import { FindUpcomingMaintenanceUseCase } from './find-upcoming-maintenance.use-case';
@@ -130,7 +131,7 @@ describe('Maintenance Use Cases', () => {
         validUserMotocycleId,
       );
       expect(results).toHaveLength(2);
-      // Should be sorted by date descending
+
       expect(
         results[0].getPerformedAt().getTime() >=
           results[1].getPerformedAt().getTime(),
@@ -182,7 +183,7 @@ describe('Maintenance Use Cases', () => {
       );
 
       expect(results).toHaveLength(2);
-      // Record 1 should be overdue (18000 >= 15000), Record 2 should be upcoming (18000 < 25000)
+
       expect(results[0].isOverdueByOdometer).toBe(true);
       expect(results[1].isOverdueByOdometer).toBe(false);
     });

@@ -16,7 +16,7 @@ export class CreateMaintenanceRecordUseCase {
   ) {}
 
   async execute(dto: CreateMaintenanceRecordDto): Promise<MaintenanceRecord> {
-    // Validate that userMotocycleId is provided
+
     if (!dto.userMotocycleId || dto.userMotocycleId.trim() === '') {
       throw new InvalidArgumentException(
         'userMotocycleId',
@@ -24,7 +24,6 @@ export class CreateMaintenanceRecordUseCase {
       );
     }
 
-    // Validate that performedAt is in the past
     const performedAtDate = new Date(dto.performedAt);
     if (performedAtDate > new Date()) {
       throw new InvalidArgumentException(
@@ -33,7 +32,6 @@ export class CreateMaintenanceRecordUseCase {
       );
     }
 
-    // Validate that odometerAtService is non-negative
     if (dto.odometerAtService < 0) {
       throw new InvalidArgumentException(
         'odometerAtService',
@@ -41,10 +39,8 @@ export class CreateMaintenanceRecordUseCase {
       );
     }
 
-    // Create the maintenance record entity
     const maintenanceRecord = MaintenanceRecord.create(dto);
 
-    // Persist to repository
     return this.repository.save(maintenanceRecord);
   }
 }

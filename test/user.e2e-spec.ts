@@ -1,3 +1,4 @@
+
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
@@ -38,20 +39,19 @@ describe('User API (E2E)', () => {
     });
 
     it('should return 500 for duplicate email', async () => {
-      // Create first user
+
       await request(app.getHttpServer()).post('/users').send({
         name: 'John Doe',
         email: 'john@example.com',
       });
 
-      // Try to create duplicate
       return request(app.getHttpServer())
         .post('/users')
         .send({
           name: 'Jane Doe',
-          email: 'john@example.com', // Same email
+          email: 'john@example.com',
         })
-        .expect(500); // Will throw error (you can add exception filter to return 400/409)
+        .expect(500);
     });
 
     it('should return 500 for invalid email', () => {
@@ -59,23 +59,23 @@ describe('User API (E2E)', () => {
         .post('/users')
         .send({
           name: 'John Doe',
-          email: 'invalid-email', // No @
+          email: 'invalid-email',
         })
-        .expect(500); // Will throw error
+        .expect(500);
     });
 
     it('should return 500 for invalid name', () => {
       return request(app.getHttpServer())
         .post('/users')
         .send({
-          name: 'J', // Too short
+          name: 'J',
           email: 'john@example.com',
         })
-        .expect(500); // Will throw error
+        .expect(500);
     });
 
     it('should create multiple users', async () => {
-      // Create first user
+
       const user1Response = await request(app.getHttpServer())
         .post('/users')
         .send({
@@ -83,7 +83,6 @@ describe('User API (E2E)', () => {
           email: 'john@example.com',
         });
 
-      // Create second user
       const user2Response = await request(app.getHttpServer())
         .post('/users')
         .send({
@@ -93,8 +92,6 @@ describe('User API (E2E)', () => {
 
       expect(user1Response.body.id).not.toBe(user2Response.body.id);
 
-      // Users created successfully (verified in previous tests)
-      // Note: In-memory repository override removed for simplicity
     });
   });
 });

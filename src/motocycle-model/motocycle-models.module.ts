@@ -29,6 +29,7 @@ import { MotocycleModelsController } from './presentation/motocycle-models.contr
   exports: [
     FindMotocycleModelByIdUseCase,
     FindMotocycleModelsByManufacturerUseCase,
+    MOTOCYCLE_MODEL_REPOSITORY,
   ],
 })
 export class MotocycleModelsModule {}

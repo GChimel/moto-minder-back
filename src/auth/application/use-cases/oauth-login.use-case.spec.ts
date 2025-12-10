@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/unbound-method, @typescript-eslint/no-unsafe-assignment */
+
 import { BadRequestException } from '@nestjs/common';
 import { OAuthLoginUseCase, OAuthLoginDto } from './oauth-login.use-case';
 import { IOAuthProvider, OAuthProfile } from '../ports/oauth-provider.port';
@@ -14,7 +14,7 @@ describe('OAuthLoginUseCase', () => {
   let authTokenGenerator: jest.Mocked<IAuthTokenGenerator>;
 
   beforeEach(() => {
-    // Create mock OAuth providers
+
     googleOAuthProvider = {
       getProfile: jest.fn(),
       refreshToken: jest.fn(),
@@ -25,7 +25,6 @@ describe('OAuthLoginUseCase', () => {
       refreshToken: jest.fn(),
     } as unknown as jest.Mocked<IOAuthProvider>;
 
-    // Create mock repositories
     userRepository = {
       save: jest.fn(),
       findById: jest.fn(),
@@ -34,12 +33,10 @@ describe('OAuthLoginUseCase', () => {
       delete: jest.fn(),
     } as unknown as jest.Mocked<UserRepositoryPort>;
 
-    // Create mock token generator
     authTokenGenerator = {
       generate: jest.fn(),
     } as unknown as jest.Mocked<IAuthTokenGenerator>;
 
-    // Create use case with mocked dependencies
     useCase = new OAuthLoginUseCase(
       googleOAuthProvider,
       garminOAuthProvider,
@@ -63,7 +60,7 @@ describe('OAuthLoginUseCase', () => {
     };
 
     it('should create new user and return token for first-time Google login', async () => {
-      // Arrange
+
       const expectedUser = await User.create({
         name: mockGoogleProfile.name,
         email: mockGoogleProfile.email,
@@ -75,10 +72,8 @@ describe('OAuthLoginUseCase', () => {
       userRepository.save.mockResolvedValue(expectedUser);
       authTokenGenerator.generate.mockResolvedValue('jwt_token_12345');
 
-      // Act
       const result = await useCase.execute(validGoogleDto);
 
-      // Assert
       expect(result.token).toBe('jwt_token_12345');
       expect(result.user).toBeDefined();
       expect(googleOAuthProvider.getProfile).toHaveBeenCalledWith(
@@ -94,7 +89,7 @@ describe('OAuthLoginUseCase', () => {
     });
 
     it('should return token for existing Google user without creating new user', async () => {
-      // Arrange
+
       const existingUser = await User.create({
         name: 'John Doe',
         email: 'user@gmail.com',
@@ -105,10 +100,8 @@ describe('OAuthLoginUseCase', () => {
       userRepository.findByEmail.mockResolvedValue(existingUser);
       authTokenGenerator.generate.mockResolvedValue('jwt_token_existing_user');
 
-      // Act
       const result = await useCase.execute(validGoogleDto);
 
-      // Assert
       expect(result.token).toBe('jwt_token_existing_user');
       expect(result.user).toBeDefined();
       expect(googleOAuthProvider.getProfile).toHaveBeenCalledWith(
@@ -117,13 +110,13 @@ describe('OAuthLoginUseCase', () => {
       expect(userRepository.findByEmail).toHaveBeenCalledWith(
         mockGoogleProfile.email,
       );
-      // Save should not be called for existing user
+
       expect(userRepository.save).not.toHaveBeenCalled();
       expect(authTokenGenerator.generate).toHaveBeenCalled();
     });
 
     it('should handle Google OAuth profile correctly', async () => {
-      // Arrange
+
       const googleProfile: OAuthProfile = {
         id: 'google_user_456',
         email: 'jane@gmail.com',
@@ -143,13 +136,11 @@ describe('OAuthLoginUseCase', () => {
       userRepository.save.mockResolvedValue(expectedUser);
       authTokenGenerator.generate.mockResolvedValue('token');
 
-      // Act
       const result = await useCase.execute({
         code: 'code_456',
         provider: 'google',
       });
 
-      // Assert
       expect(result.user.getName()).toBe(googleProfile.name);
       expect(result.user.getEmail().getValue()).toBe(googleProfile.email);
     });
@@ -170,7 +161,7 @@ describe('OAuthLoginUseCase', () => {
     };
 
     it('should create new user and return token for first-time Garmin login', async () => {
-      // Arrange
+
       const expectedUser = await User.create({
         name: mockGarminProfile.name,
         email: mockGarminProfile.email,
@@ -182,10 +173,8 @@ describe('OAuthLoginUseCase', () => {
       userRepository.save.mockResolvedValue(expectedUser);
       authTokenGenerator.generate.mockResolvedValue('jwt_token_garmin');
 
-      // Act
       const result = await useCase.execute(validGarminDto);
 
-      // Assert
       expect(result.token).toBe('jwt_token_garmin');
       expect(result.user).toBeDefined();
       expect(garminOAuthProvider.getProfile).toHaveBeenCalledWith(
@@ -198,7 +187,7 @@ describe('OAuthLoginUseCase', () => {
     });
 
     it('should return token for existing Garmin user without creating new user', async () => {
-      // Arrange
+
       const existingUser = await User.create({
         name: 'Bob Rider',
         email: 'rider@garmin.com',
@@ -211,10 +200,8 @@ describe('OAuthLoginUseCase', () => {
         'jwt_token_existing_garmin',
       );
 
-      // Act
       const result = await useCase.execute(validGarminDto);
 
-      // Assert
       expect(result.token).toBe('jwt_token_existing_garmin');
       expect(result.user).toBeDefined();
       expect(garminOAuthProvider.getProfile).toHaveBeenCalledWith(
@@ -229,7 +216,7 @@ describe('OAuthLoginUseCase', () => {
 
   describe('provider selection', () => {
     it('should use Google provider when provider is "google"', async () => {
-      // Arrange
+
       const mockProfile: OAuthProfile = {
         id: 'user_id',
         email: 'test@gmail.com',
@@ -248,19 +235,17 @@ describe('OAuthLoginUseCase', () => {
       userRepository.findByEmail.mockResolvedValue(expectedUser);
       authTokenGenerator.generate.mockResolvedValue('token');
 
-      // Act
       await useCase.execute({
         code: 'code',
         provider: 'google',
       });
 
-      // Assert
       expect(googleOAuthProvider.getProfile).toHaveBeenCalled();
       expect(garminOAuthProvider.getProfile).not.toHaveBeenCalled();
     });
 
     it('should use Garmin provider when provider is "garmin"', async () => {
-      // Arrange
+
       const mockProfile: OAuthProfile = {
         id: 'user_id',
         email: 'test@garmin.com',
@@ -279,19 +264,17 @@ describe('OAuthLoginUseCase', () => {
       userRepository.findByEmail.mockResolvedValue(expectedUser);
       authTokenGenerator.generate.mockResolvedValue('token');
 
-      // Act
       await useCase.execute({
         code: 'code',
         provider: 'garmin',
       });
 
-      // Assert
       expect(garminOAuthProvider.getProfile).toHaveBeenCalled();
       expect(googleOAuthProvider.getProfile).not.toHaveBeenCalled();
     });
 
     it('should throw BadRequestException for unsupported provider', async () => {
-      // Arrange & Act & Assert
+
       await expect(
         useCase.execute({
           code: 'code',
@@ -303,7 +286,7 @@ describe('OAuthLoginUseCase', () => {
 
   describe('token generation', () => {
     it('should generate token with correct subject (user id)', async () => {
-      // Arrange
+
       const mockProfile: OAuthProfile = {
         id: 'oauth_id',
         email: 'test@gmail.com',
@@ -323,13 +306,11 @@ describe('OAuthLoginUseCase', () => {
       userRepository.save.mockResolvedValue(createdUser);
       authTokenGenerator.generate.mockResolvedValue('jwt_token');
 
-      // Act
       await useCase.execute({
         code: 'code',
         provider: 'google',
       });
 
-      // Assert
       expect(authTokenGenerator.generate).toHaveBeenCalledWith({
         sub: expect.any(String),
       });
@@ -339,7 +320,7 @@ describe('OAuthLoginUseCase', () => {
     });
 
     it('should return generated token in response', async () => {
-      // Arrange
+
       const mockProfile: OAuthProfile = {
         id: 'oauth_id',
         email: 'test@gmail.com',
@@ -360,20 +341,18 @@ describe('OAuthLoginUseCase', () => {
       userRepository.findByEmail.mockResolvedValue(expectedUser);
       authTokenGenerator.generate.mockResolvedValue(expectedToken);
 
-      // Act
       const result = await useCase.execute({
         code: 'code',
         provider: 'google',
       });
 
-      // Assert
       expect(result.token).toBe(expectedToken);
     });
   });
 
   describe('synthetic password for OAuth users', () => {
     it('should create OAuth user with synthetic password containing provider and id', async () => {
-      // Arrange
+
       const mockProfile: OAuthProfile = {
         id: 'unique_oauth_id_123',
         email: 'test@gmail.com',
@@ -393,27 +372,24 @@ describe('OAuthLoginUseCase', () => {
 
       authTokenGenerator.generate.mockResolvedValue('token');
 
-      // Act
       await useCase.execute({
         code: 'code',
         provider: 'google',
       });
 
-      // Assert
       expect(savedUser).toBeDefined();
-      // Password should be hashed, so we can't directly compare
+
       expect(savedUser?.getPassword()).toBeDefined();
     });
   });
 
   describe('error handling', () => {
     it('should propagate OAuth provider errors', async () => {
-      // Arrange
+
       googleOAuthProvider.getProfile.mockRejectedValue(
         new Error('OAuth request failed'),
       );
 
-      // Act & Assert
       await expect(
         useCase.execute({
           code: 'invalid_code',
@@ -423,7 +399,7 @@ describe('OAuthLoginUseCase', () => {
     });
 
     it('should propagate repository errors', async () => {
-      // Arrange
+
       const mockProfile: OAuthProfile = {
         id: 'oauth_id',
         email: 'test@gmail.com',
@@ -437,7 +413,6 @@ describe('OAuthLoginUseCase', () => {
         new Error('Database connection error'),
       );
 
-      // Act & Assert
       await expect(
         useCase.execute({
           code: 'code',
@@ -447,7 +422,7 @@ describe('OAuthLoginUseCase', () => {
     });
 
     it('should propagate token generation errors', async () => {
-      // Arrange
+
       const mockProfile: OAuthProfile = {
         id: 'oauth_id',
         email: 'test@gmail.com',
@@ -468,7 +443,6 @@ describe('OAuthLoginUseCase', () => {
         new Error('Token generation failed'),
       );
 
-      // Act & Assert
       await expect(
         useCase.execute({
           code: 'code',
@@ -480,7 +454,7 @@ describe('OAuthLoginUseCase', () => {
 
   describe('multiple OAuth login flows', () => {
     it('should handle sequential logins with different providers', async () => {
-      // Arrange
+
       const googleProfile: OAuthProfile = {
         id: 'google_id',
         email: 'user@gmail.com',
@@ -520,7 +494,6 @@ describe('OAuthLoginUseCase', () => {
 
       authTokenGenerator.generate.mockResolvedValue('token');
 
-      // Act
       const googleResult = await useCase.execute({
         code: 'google_code',
         provider: 'google',
@@ -531,7 +504,6 @@ describe('OAuthLoginUseCase', () => {
         provider: 'garmin',
       });
 
-      // Assert
       expect(googleResult.token).toBe('token');
       expect(garminResult.token).toBe('token');
       expect(googleOAuthProvider.getProfile).toHaveBeenCalled();

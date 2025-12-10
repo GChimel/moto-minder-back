@@ -21,13 +21,11 @@ export class FuelConsumed {
     return this.liters * 0.264172;
   }
 
-  calculateFuelEconomy(
-    distanceKilometers: number,
-  ): number | undefined {
+  calculateFuelEconomy(distanceKilometers: number): number | undefined {
     if (this.liters === 0 || distanceKilometers === 0) {
       return undefined;
     }
-    // Calculate L/100km
+
     return (this.liters / distanceKilometers) * 100;
   }
 

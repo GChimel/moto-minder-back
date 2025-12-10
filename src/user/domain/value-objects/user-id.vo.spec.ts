@@ -1,3 +1,4 @@
+
 import { UserId } from './user-id.vo';
 
 describe('UserId Value Object', () => {
@@ -20,7 +21,6 @@ describe('UserId Value Object', () => {
       const userId = new UserId();
       const id = userId.getValue();
 
-      // UUID v4 format: xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx
       const uuidRegex =
         /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
       expect(uuidRegex.test(id)).toBe(true);
@@ -30,7 +30,7 @@ describe('UserId Value Object', () => {
       const userId = new UserId(null as any);
 
       expect(userId.getValue()).toBeDefined();
-      expect(userId.getValue().length).toBe(36); // UUID length with hyphens
+      expect(userId.getValue().length).toBe(36);
     });
 
     it('should accept valid UUID formats', () => {
@@ -131,7 +131,6 @@ describe('UserId Value Object', () => {
 
       expect(userId.getValue()).toBe(id);
 
-      // Attempting to modify should not change the value
       expect(userId.getValue()).toBe(id);
     });
 
@@ -216,7 +215,6 @@ describe('UserId Value Object', () => {
       const originalId = '550e8400-e29b-41d4-a716-446655440000';
       const userId1 = new UserId(originalId);
 
-      // Simulate saving to DB and retrieving
       const savedValue = userId1.getValue();
       const userId2 = new UserId(savedValue);
 

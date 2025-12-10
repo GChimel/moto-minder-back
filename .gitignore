@@ -3,6 +3,7 @@
 /node_modules
 /build
 
+
 # Logs
 logs
 *.log
@@ -28,6 +29,7 @@ lerna-debug.log*
 .settings/
 *.sublime-workspace
 .claude
+CONTEXT.md
 
 # IDE - VSCode
 .vscode/*
