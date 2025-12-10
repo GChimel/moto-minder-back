@@ -103,12 +103,10 @@ describe('User API (E2E - Real Database)', () => {
     });
 
     it('should set timestamps automatically', async () => {
-      const response = await request(app.getHttpServer())
-        .post('/users')
-        .send({
-          name: 'John Doe',
-          email: 'john@example.com',
-        });
+      const response = await request(app.getHttpServer()).post('/users').send({
+        name: 'John Doe',
+        email: 'john@example.com',
+      });
 
       // Check database for timestamps
       const result = await dataSource.query(

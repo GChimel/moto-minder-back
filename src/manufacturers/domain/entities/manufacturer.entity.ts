@@ -1,9 +1,9 @@
-import { ManufacturerId } from '../value-objects/manufacturer-id.vo';
+import { IdVO } from '../../../shared/infrastructure/domain/value-objects/id-vo';
 import { InvalidManufacturerNameException } from '../exceptions/invalid-manufacturer-name.exception';
 
 export class Manufacturer {
   constructor(
-    private readonly id: ManufacturerId,
+    private readonly id: IdVO,
     private name: string,
   ) {}
 
@@ -12,14 +12,14 @@ export class Manufacturer {
       throw new InvalidManufacturerNameException();
     }
 
-    return new Manufacturer(new ManufacturerId(), name.trim());
+    return new Manufacturer(new IdVO(), name.trim());
   }
 
   static reconstitute(id: string, name: string): Manufacturer {
-    return new Manufacturer(new ManufacturerId(id), name);
+    return new Manufacturer(new IdVO(id), name);
   }
 
-  getId(): ManufacturerId {
+  getId(): IdVO {
     return this.id;
   }
 

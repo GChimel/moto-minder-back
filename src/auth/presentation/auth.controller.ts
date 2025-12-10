@@ -1,8 +1,10 @@
 import { Body, Controller, Post, HttpCode, HttpStatus } from '@nestjs/common';
 import { LoginUseCase } from '../application/use-cases/login.use-case';
 import { RegisterUseCase } from '../application/use-cases/register.use-case';
+import { OAuthLoginUseCase } from '../application/use-cases/oauth-login.use-case';
 import { LoginDto } from './dtos/login.dto';
 import { RegisterDto } from './dtos/register.dto';
+import { OAuthLoginDto } from './dtos/oauth-login.dto';
 import { AuthResponseDto } from './dtos/auth-response.dto';
 
 @Controller('auth')
@@ -10,6 +12,7 @@ export class AuthController {
   constructor(
     private readonly loginUseCase: LoginUseCase,
     private readonly registerUseCase: RegisterUseCase,
+    private readonly oauthLoginUseCase: OAuthLoginUseCase,
   ) {}
 
   @Post('register')
@@ -31,5 +34,20 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   async login(@Body() dto: LoginDto): Promise<{ token: string }> {
     return this.loginUseCase.execute(dto);
+  }
+
+  @Post('oauth/login')
+  @HttpCode(HttpStatus.OK)
+  async oauthLogin(@Body() dto: OAuthLoginDto): Promise<AuthResponseDto> {
+    const { token, user } = await this.oauthLoginUseCase.execute(dto);
+
+    return {
+      token,
+      user: {
+        id: user.getId().getValue(),
+        name: user.getName(),
+        email: user.getEmail().getValue(),
+      },
+    };
   }
 }

@@ -8,8 +8,15 @@ import { USER_REPOSITORY } from '../user/application/ports/user.repository.port'
 import { TypeOrmUserRepository } from '../user/infrastructure/adapters/typeorm-user.repository';
 import { LoginUseCase } from './application/use-cases/login.use-case';
 import { RegisterUseCase } from './application/use-cases/register.use-case';
+import { OAuthLoginUseCase } from './application/use-cases/oauth-login.use-case';
 import { AUTH_TOKEN_GENERATOR } from './application/ports/auth-token-generator.port';
+import {
+  GOOGLE_OAUTH_PROVIDER,
+  GARMIN_OAUTH_PROVIDER,
+} from './application/ports/oauth-provider.port';
 import { JwtTokenGeneratorAdapter } from './infrastructure/adapters/jwt-token-generator.adapter';
+import { GoogleOAuthAdapter } from './infrastructure/adapters/google-oauth.adapter';
+import { GarminOAuthAdapter } from './infrastructure/adapters/garmin-oauth.adapter';
 import { JwtStrategy } from './presentation/jwt.strategy';
 import { AuthController } from './presentation/auth.controller';
 
@@ -33,6 +40,7 @@ import { AuthController } from './presentation/auth.controller';
   providers: [
     LoginUseCase,
     RegisterUseCase,
+    OAuthLoginUseCase,
     JwtStrategy,
     {
       provide: USER_REPOSITORY,
@@ -41,6 +49,14 @@ import { AuthController } from './presentation/auth.controller';
     {
       provide: AUTH_TOKEN_GENERATOR,
       useClass: JwtTokenGeneratorAdapter,
+    },
+    {
+      provide: GOOGLE_OAUTH_PROVIDER,
+      useClass: GoogleOAuthAdapter,
+    },
+    {
+      provide: GARMIN_OAUTH_PROVIDER,
+      useClass: GarminOAuthAdapter,
     },
   ],
   controllers: [AuthController],

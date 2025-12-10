@@ -1,5 +1,5 @@
-import { BadRequestException } from '@nestjs/common';
 import { compare, hash } from 'bcrypt';
+import { InvalidArgumentException } from '../../../shared/domain/exceptions/invalid-argument.exception';
 import { User } from '../entities/user.entity';
 
 export class UserPassword {
@@ -13,7 +13,8 @@ export class UserPassword {
     }
 
     if (value && value.length < 8) {
-      throw new BadRequestException(
+      throw new InvalidArgumentException(
+        'password',
         'Password must be at least 8 characters long',
       );
     }

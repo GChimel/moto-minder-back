@@ -22,5 +22,6 @@ import { UserController } from './presentation/user.controller';
     },
   ],
   controllers: [UserController],
+  exports: [USER_REPOSITORY],
 })
 export class UserModule {}

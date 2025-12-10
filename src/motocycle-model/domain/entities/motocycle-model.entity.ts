@@ -1,10 +1,9 @@
-import { ManufacturerId } from '../../../manufacturers/domain/value-objects/manufacturer-id.vo';
+import { IdVO } from '../../../shared/infrastructure/domain/value-objects/id-vo';
 import { MotocycleCoolingSystem } from '../value-objects/motocycle-model-cooling-system.vo';
 import { MotocycleEngineCycle } from '../value-objects/motocycle-model-engine-cycle.vo';
-import { MotocycleModelId } from '../value-objects/motocycle-model-id.vo';
 import { MotocycleModelName } from '../value-objects/motocycle-model-name.vo';
 
-interface IMotocycleModel {
+export interface IMotocycleModel {
   manufacturerId: string;
   name: string;
   yearStart: number;
@@ -29,8 +28,8 @@ interface IMotocycleModel {
 
 export class MotocycleModel {
   constructor(
-    private readonly id: MotocycleModelId,
-    private readonly manufacturerId: ManufacturerId,
+    private readonly id: IdVO,
+    private readonly manufacturerId: IdVO,
     private name: MotocycleModelName,
     private yearStart: number,
     private yearEnd: number,
@@ -54,8 +53,8 @@ export class MotocycleModel {
 
   static create(body: IMotocycleModel): MotocycleModel {
     return new MotocycleModel(
-      new MotocycleModelId(),
-      new ManufacturerId(body.manufacturerId),
+      new IdVO(),
+      new IdVO(body.manufacturerId),
       new MotocycleModelName(body.name),
       body.yearStart,
       body.yearEnd,
@@ -102,8 +101,8 @@ export class MotocycleModel {
     coolantCapacityL?: number | null,
   ): MotocycleModel {
     return new MotocycleModel(
-      new MotocycleModelId(id),
-      new ManufacturerId(manufacturerId),
+      new IdVO(id),
+      new IdVO(manufacturerId),
       new MotocycleModelName(name),
       yearStart,
       yearEnd,
@@ -127,11 +126,11 @@ export class MotocycleModel {
   }
 
   // Getters
-  getId(): MotocycleModelId {
+  getId(): IdVO {
     return this.id;
   }
 
-  getManufacturerId(): ManufacturerId {
+  getManufacturerId(): IdVO {
     return this.manufacturerId;
   }
 

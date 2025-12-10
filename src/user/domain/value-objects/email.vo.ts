@@ -9,7 +9,19 @@ export class Email {
   }
 
   private isValid(email: string): boolean {
-    return email.includes('@');
+    // RFC 5322 compliant email regex
+    const emailRegex =
+      /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
+
+    if (!email || typeof email !== 'string') {
+      return false;
+    }
+
+    if (email.length > 254) {
+      return false; // Max email length per RFC 5321
+    }
+
+    return emailRegex.test(email.toLowerCase());
   }
 
   getValue(): string {

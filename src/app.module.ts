@@ -2,8 +2,10 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { DatabaseModule } from './shared/infrastructure/database/database.module';
 import { UserModule } from './user/user.module';
+import { ManufacturersModule } from './manufacturers/manufacturers.module';
 import { MotocycleModelsModule } from './motocycle-model/motocycle-models.module';
 import { AuthModule } from './auth/auth.module';
+import { UserMotocycleModule } from './user-motocycle/user-motocycle.module';
 
 @Module({
   imports: [
@@ -14,7 +16,9 @@ import { AuthModule } from './auth/auth.module';
     DatabaseModule,
     AuthModule,
     UserModule,
+    ManufacturersModule,
     MotocycleModelsModule,
+    UserMotocycleModule,
   ],
   controllers: [],
   providers: [],
