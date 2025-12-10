@@ -8,6 +8,7 @@ import { AuthModule } from './auth/auth.module';
 import { UserMotocycleModule } from './user-motocycle/user-motocycle.module';
 import { MaintenanceModule } from './maintenance/maintenance.module';
 import { RideModule } from './ride/ride.module';
+import { MotorcyclePartModule } from './motorcycle-part/motorcycle-part.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { RideModule } from './ride/ride.module';
     ManufacturersModule,
     MotocycleModelsModule,
     UserMotocycleModule,
+    MotorcyclePartModule,
     MaintenanceModule,
     RideModule,
   ],
