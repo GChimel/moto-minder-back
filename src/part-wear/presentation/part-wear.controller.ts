@@ -8,7 +8,7 @@ import {
   HttpCode,
   BadRequestException,
 } from '@nestjs/common';
-import { JwtAuthGuard } from '../../../shared/presentation/guards/jwt-auth.guard';
+import { JwtAuthGuard } from '../../auth/presentation/guards/jwt.guard';
 import { CalculatePartWearUseCase } from '../application/use-cases/calculate-part-wear.use-case';
 import { GetPartWearUseCase } from '../application/use-cases/get-part-wear.use-case';
 import { GetMotorcyclePartsWearUseCase } from '../application/use-cases/get-motorcycle-parts-wear.use-case';

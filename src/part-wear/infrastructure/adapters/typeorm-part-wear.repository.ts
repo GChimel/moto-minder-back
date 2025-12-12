@@ -92,13 +92,13 @@ export class TypeOrmPartWearRepository implements PartWearRepositoryPort {
 
   private toDomain(schema: PartWearSchema): PartWear {
     return PartWear.reconstitute({
-      id: IdVO.create(schema.id),
-      motorcyclePartId: IdVO.create(schema.motorcyclePartId),
+      id: new IdVO(schema.id),
+      motorcyclePartId: new IdVO(schema.motorcyclePartId),
       currentWearPercentage: WearPercentage.create(
         schema.currentWearPercentage,
       ),
       lastCalculatedAt: schema.lastCalculatedAt,
-      lastKnownOdometer: Odometer.create(schema.lastKnownOdometer),
+      lastKnownOdometer: new Odometer(schema.lastKnownOdometer),
       projectedReplacementOdometer: schema.projectedReplacementOdometer,
       projectedReplacementDate: schema.projectedReplacementDate,
       isMaintenanceDue: schema.isMaintenanceDue,

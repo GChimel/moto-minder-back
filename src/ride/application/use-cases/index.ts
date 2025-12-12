@@ -8,3 +8,7 @@ export {
   GetRideStatisticsUseCase,
   type RideStatisticsDto,
 } from './get-ride-statistics.use-case';
+export { GetRideUseCase } from './get-ride.use-case';
+export { CancelRideUseCase } from './cancel-ride.use-case';
+export { UpdateRideNotesUseCase } from './update-ride-notes.use-case';
+export { DeleteRideUseCase } from './delete-ride.use-case';
