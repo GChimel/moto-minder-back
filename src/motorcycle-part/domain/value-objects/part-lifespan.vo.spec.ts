@@ -18,7 +18,10 @@ describe('PartLifespan Value Object', () => {
     });
 
     it('should create PartLifespan with both kilometers and months', () => {
-      const lifespan = new PartLifespan({ lifespanKm: 15000, lifespanMonths: 24 });
+      const lifespan = new PartLifespan({
+        lifespanKm: 15000,
+        lifespanMonths: 24,
+      });
 
       expect(lifespan.getLifespanKm()).toBe(15000);
       expect(lifespan.getLifespanMonths()).toBe(24);
@@ -67,7 +70,10 @@ describe('PartLifespan Value Object', () => {
 
   describe('getValue', () => {
     it('should return object with both values', () => {
-      const lifespan = new PartLifespan({ lifespanKm: 15000, lifespanMonths: 24 });
+      const lifespan = new PartLifespan({
+        lifespanKm: 15000,
+        lifespanMonths: 24,
+      });
       const value = lifespan.getValue();
 
       expect(value.lifespanKm).toBe(15000);
@@ -85,8 +91,14 @@ describe('PartLifespan Value Object', () => {
 
   describe('equals', () => {
     it('should return true for equal PartLifespans', () => {
-      const lifespan1 = new PartLifespan({ lifespanKm: 15000, lifespanMonths: 24 });
-      const lifespan2 = new PartLifespan({ lifespanKm: 15000, lifespanMonths: 24 });
+      const lifespan1 = new PartLifespan({
+        lifespanKm: 15000,
+        lifespanMonths: 24,
+      });
+      const lifespan2 = new PartLifespan({
+        lifespanKm: 15000,
+        lifespanMonths: 24,
+      });
 
       expect(lifespan1.equals(lifespan2)).toBe(true);
     });
@@ -106,7 +118,10 @@ describe('PartLifespan Value Object', () => {
     });
 
     it('should return false when only one has months defined', () => {
-      const lifespan1 = new PartLifespan({ lifespanKm: 15000, lifespanMonths: 24 });
+      const lifespan1 = new PartLifespan({
+        lifespanKm: 15000,
+        lifespanMonths: 24,
+      });
       const lifespan2 = new PartLifespan({ lifespanKm: 15000 });
 
       expect(lifespan1.equals(lifespan2)).toBe(false);

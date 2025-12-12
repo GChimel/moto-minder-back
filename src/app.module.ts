@@ -9,6 +9,7 @@ import { UserMotocycleModule } from './user-motocycle/user-motocycle.module';
 import { MaintenanceModule } from './maintenance/maintenance.module';
 import { RideModule } from './ride/ride.module';
 import { MotorcyclePartModule } from './motorcycle-part/motorcycle-part.module';
+import { PartWearModule } from './part-wear/part-wear.module';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { MotorcyclePartModule } from './motorcycle-part/motorcycle-part.module';
     MotocycleModelsModule,
     UserMotocycleModule,
     MotorcyclePartModule,
+    PartWearModule,
     MaintenanceModule,
     RideModule,
   ],

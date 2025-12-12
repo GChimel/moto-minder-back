@@ -25,7 +25,9 @@ describe('MotorcyclePart Entity', () => {
       const part = MotorcyclePart.create(validInput);
 
       expect(part.getId()).toBeDefined();
-      expect(part.getUserMotocycleId().getValue()).toBe(validInput.userMotocycleId);
+      expect(part.getUserMotocycleId().getValue()).toBe(
+        validInput.userMotocycleId,
+      );
       expect(part.getPartType()).toBe(PartType.REAR_TIRE);
       expect(part.getPartCategory()).toBe(PartCategory.TIRES);
       expect(part.getName()).toBe(validInput.name);
@@ -52,13 +54,14 @@ describe('MotorcyclePart Entity', () => {
     it('should have equal created and updated timestamps on creation', () => {
       const part = MotorcyclePart.create(validInput);
 
-      expect(part.getCreatedAt().getTime()).toBe(
-        part.getUpdatedAt().getTime(),
-      );
+      expect(part.getCreatedAt().getTime()).toBe(part.getUpdatedAt().getTime());
     });
 
     it('should use default replacement threshold when not provided', () => {
-      const inputWithoutThreshold = { ...validInput, replacementThreshold: undefined };
+      const inputWithoutThreshold = {
+        ...validInput,
+        replacementThreshold: undefined,
+      };
       const part = MotorcyclePart.create(inputWithoutThreshold);
 
       expect(part.getReplacementThreshold()).toBe(70);
@@ -151,7 +154,9 @@ describe('MotorcyclePart Entity', () => {
       );
 
       expect(part.getId().getValue()).toBe(id);
-      expect(part.getUserMotocycleId().getValue()).toBe(validInput.userMotocycleId);
+      expect(part.getUserMotocycleId().getValue()).toBe(
+        validInput.userMotocycleId,
+      );
       expect(part.getPartType()).toBe(PartType.FRONT_TIRE);
       expect(part.getIsActive()).toBe(true);
     });
