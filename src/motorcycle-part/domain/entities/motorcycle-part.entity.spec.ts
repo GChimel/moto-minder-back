@@ -2,6 +2,7 @@ import { MotorcyclePart } from './motorcycle-part.entity';
 import { InvalidArgumentException } from '../../../shared/domain/exceptions/invalid-argument.exception';
 import { PartType } from '../enums/part-type.enum';
 import { PartCategory } from '../enums/part-category.enum';
+import { PartLifespan } from '../value-objects/part-lifespan.vo';
 
 describe('MotorcyclePart Entity', () => {
   const validInput = {
@@ -198,7 +199,6 @@ describe('MotorcyclePart Entity', () => {
   describe('updateExpectedLifespan', () => {
     it('should update expected lifespan', () => {
       const part = MotorcyclePart.create(validInput);
-      const { PartLifespan } = require('../value-objects/part-lifespan.vo');
       const newLifespan = new PartLifespan({ lifespanKm: 20000 });
 
       part.updateExpectedLifespan(newLifespan);

@@ -10,21 +10,23 @@ import {
   PartWearNotFoundException,
   InvalidWearCalculationException,
 } from '../../domain/exceptions/part-wear.exceptions';
+import { PartWearRepositoryPort } from '../ports/part-wear.repository.port';
+import { MotorcyclePartRepositoryPort } from '../../../motorcycle-part/application/ports/motorcycle-part.repository.port';
 
 describe('CalculatePartWearUseCase', () => {
   let useCase: CalculatePartWearUseCase;
-  let mockPartWearRepository: any;
-  let mockMotorcyclePartRepository: any;
+  let mockPartWearRepository: jest.Mocked<PartWearRepositoryPort>;
+  let mockMotorcyclePartRepository: jest.Mocked<MotorcyclePartRepositoryPort>;
 
   beforeEach(() => {
     mockPartWearRepository = {
       findById: jest.fn(),
       save: jest.fn(),
-    } as unknown as any;
+    } as unknown as jest.Mocked<PartWearRepositoryPort>;
 
     mockMotorcyclePartRepository = {
       findById: jest.fn(),
-    } as unknown as any;
+    } as unknown as jest.Mocked<MotorcyclePartRepositoryPort>;
 
     useCase = new CalculatePartWearUseCase(
       mockPartWearRepository,
@@ -67,8 +69,11 @@ describe('CalculatePartWearUseCase', () => {
       expect(result.partWear).toBeDefined();
       expect(result.wearChanged).toBe(true);
       expect(result.previousWearPercentage).toBe(10);
+      // eslint-disable-next-line @typescript-eslint/unbound-method
       expect(mockPartWearRepository.findById).toHaveBeenCalledWith(partWearId);
+      // eslint-disable-next-line @typescript-eslint/unbound-method
       expect(mockMotorcyclePartRepository.findById).toHaveBeenCalled();
+      // eslint-disable-next-line @typescript-eslint/unbound-method
       expect(mockPartWearRepository.save).toHaveBeenCalled();
     });
 

@@ -1,4 +1,11 @@
-import { IsString, IsNumber, IsInt, IsPositive, IsOptional, IsDate } from 'class-validator';
+import {
+  IsString,
+  IsNumber,
+  IsInt,
+  IsPositive,
+  IsOptional,
+  IsDate,
+} from 'class-validator';
 import { Type } from 'class-transformer';
 
 export class StartRideDto {

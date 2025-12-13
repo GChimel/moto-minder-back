@@ -19,10 +19,12 @@ import { UpdateRideNotesUseCase } from '../application/use-cases/update-ride-not
 import { FindRidesByMotorcycleUseCase } from '../application/use-cases/find-rides-by-motorcycle.use-case';
 import { GetRideStatisticsUseCase } from '../application/use-cases/get-ride-statistics.use-case';
 import { DeleteRideUseCase } from '../application/use-cases/delete-ride.use-case';
+import { ImportStravaRideUseCase } from '../application/use-cases/import-strava-ride.use-case';
 import { RideResponseDto } from './dtos/ride-response.dto';
 import { StartRideDto } from './dtos/start-ride.dto';
 import { CompleteRideDto } from './dtos/complete-ride.dto';
 import { UpdateRideNotesDto } from './dtos/update-ride-notes.dto';
+import { ImportStravaRideDto } from './dtos/import-strava-ride.dto';
 import {
   RideNotFoundException,
   InvalidRideStateException,
@@ -40,6 +42,7 @@ export class RideController {
     private readonly findRidesByMotorcycleUseCase: FindRidesByMotorcycleUseCase,
     private readonly getRideStatisticsUseCase: GetRideStatisticsUseCase,
     private readonly deleteRideUseCase: DeleteRideUseCase,
+    private readonly importStravaRideUseCase: ImportStravaRideUseCase,
   ) {}
 
   @Post()
@@ -85,20 +88,15 @@ export class RideController {
   async getRideStatistics(
     @Param('userMotocycleId') userMotocycleId: string,
   ): Promise<any> {
-    try {
-      const statistics = await this.getRideStatisticsUseCase.execute(
-        userMotocycleId,
-      );
-      return {
-        totalRides: statistics.totalRides,
-        totalDistance: statistics.totalDistance,
-        totalDuration: statistics.totalDuration,
-        averageSpeed: statistics.averageSpeed,
-        averageFuelEconomy: statistics.averageFuelEconomy,
-      };
-    } catch (error) {
-      throw error;
-    }
+    const statistics =
+      await this.getRideStatisticsUseCase.execute(userMotocycleId);
+    return {
+      totalRides: statistics.totalRides,
+      totalDistance: statistics.totalDistance,
+      totalDuration: statistics.totalDuration,
+      averageSpeed: statistics.averageSpeed,
+      averageFuelEconomy: statistics.averageFuelEconomy,
+    };
   }
 
   @Post(':id/complete')
@@ -145,10 +143,7 @@ export class RideController {
     @Body() dto: UpdateRideNotesDto,
   ): Promise<RideResponseDto> {
     try {
-      const ride = await this.updateRideNotesUseCase.execute(
-        rideId,
-        dto.notes,
-      );
+      const ride = await this.updateRideNotesUseCase.execute(rideId, dto.notes);
       return new RideResponseDto(ride);
     } catch (error) {
       if (error instanceof RideNotFoundException) {
@@ -165,6 +160,22 @@ export class RideController {
       await this.deleteRideUseCase.execute(rideId);
     } catch (error) {
       if (error instanceof RideNotFoundException) {
+        throw new BadRequestException(error.message);
+      }
+      throw error;
+    }
+  }
+
+  @Post('import/strava')
+  @HttpCode(201)
+  async importStravaRide(
+    @Body() dto: ImportStravaRideDto,
+  ): Promise<RideResponseDto> {
+    try {
+      const ride = await this.importStravaRideUseCase.execute(dto);
+      return new RideResponseDto(ride);
+    } catch (error) {
+      if (error instanceof InvalidRideStateException) {
         throw new BadRequestException(error.message);
       }
       throw error;

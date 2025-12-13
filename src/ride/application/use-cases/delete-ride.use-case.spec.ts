@@ -3,16 +3,17 @@ import { Ride } from '../../domain/entities/ride.entity';
 import { RideStatus } from '../../domain/enums/ride-status.enum';
 import { IdVO } from '../../../shared/infrastructure/domain/value-objects/id-vo';
 import { RideNotFoundException } from '../../domain/exceptions/ride-exceptions';
+import { RideRepositoryPort } from '../ports/ride.repository.port';
 
 describe('DeleteRideUseCase', () => {
   let useCase: DeleteRideUseCase;
-  let mockRideRepository: any;
+  let mockRideRepository: jest.Mocked<RideRepositoryPort>;
 
   beforeEach(() => {
     mockRideRepository = {
       findById: jest.fn(),
       delete: jest.fn(),
-    } as unknown as any;
+    } as unknown as jest.Mocked<RideRepositoryPort>;
 
     useCase = new DeleteRideUseCase(mockRideRepository);
   });
@@ -40,6 +41,7 @@ describe('DeleteRideUseCase', () => {
 
       await useCase.execute(rideId);
 
+      // eslint-disable-next-line @typescript-eslint/unbound-method
       expect(mockRideRepository.delete).toHaveBeenCalledWith(rideId);
     });
 

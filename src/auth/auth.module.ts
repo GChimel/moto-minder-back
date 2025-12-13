@@ -13,10 +13,12 @@ import { AUTH_TOKEN_GENERATOR } from './application/ports/auth-token-generator.p
 import {
   GOOGLE_OAUTH_PROVIDER,
   GARMIN_OAUTH_PROVIDER,
+  STRAVA_OAUTH_PROVIDER,
 } from './application/ports/oauth-provider.port';
 import { JwtTokenGeneratorAdapter } from './infrastructure/adapters/jwt-token-generator.adapter';
 import { GoogleOAuthAdapter } from './infrastructure/adapters/google-oauth.adapter';
 import { GarminOAuthAdapter } from './infrastructure/adapters/garmin-oauth.adapter';
+import { StravaOAuthAdapter } from './infrastructure/adapters/strava-oauth.adapter';
 import { JwtStrategy } from './presentation/jwt.strategy';
 import { AuthController } from './presentation/auth.controller';
 
@@ -57,6 +59,10 @@ import { AuthController } from './presentation/auth.controller';
     {
       provide: GARMIN_OAUTH_PROVIDER,
       useClass: GarminOAuthAdapter,
+    },
+    {
+      provide: STRAVA_OAUTH_PROVIDER,
+      useClass: StravaOAuthAdapter,
     },
   ],
   controllers: [AuthController],

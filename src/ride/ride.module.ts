@@ -11,6 +11,7 @@ import { GetRideUseCase } from './application/use-cases/get-ride.use-case';
 import { CancelRideUseCase } from './application/use-cases/cancel-ride.use-case';
 import { UpdateRideNotesUseCase } from './application/use-cases/update-ride-notes.use-case';
 import { DeleteRideUseCase } from './application/use-cases/delete-ride.use-case';
+import { ImportStravaRideUseCase } from './application/use-cases/import-strava-ride.use-case';
 import { RideController } from './presentation/ride.controller';
 
 @Module({
@@ -28,6 +29,7 @@ import { RideController } from './presentation/ride.controller';
     CancelRideUseCase,
     UpdateRideNotesUseCase,
     DeleteRideUseCase,
+    ImportStravaRideUseCase,
   ],
   controllers: [RideController],
   exports: [RIDE_REPOSITORY],

@@ -14,7 +14,8 @@ export class WearCalculationService {
   calculateWear(
     part: MotorcyclePart,
     currentOdometer: Odometer,
-    currentDate: Date = new Date(),
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    _currentDate: Date = new Date(),
   ): WearCalculationResult {
     const currentKm = currentOdometer.getValue();
     const installationKm = part.getInstallationOdometer().getValue();
