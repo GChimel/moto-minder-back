@@ -13,6 +13,14 @@ import {
   NotFoundException,
   UnprocessableEntityException,
 } from '@nestjs/common';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+  ApiBearerAuth,
+  ApiParam,
+  ApiBody,
+} from '@nestjs/swagger';
 import { JwtAuthGuard } from '../../auth/presentation/guards/jwt.guard';
 import { StartRideUseCase } from '../application/use-cases/start-ride.use-case';
 import { GetRideUseCase } from '../application/use-cases/get-ride.use-case';
@@ -34,6 +42,8 @@ import {
 } from '../domain/exceptions/ride-exceptions';
 import { RideStatisticsResponseDto } from './dtos/ride-statistics-response.dto';
 
+@ApiTags('rides')
+@ApiBearerAuth('JWT-auth')
 @Controller('rides')
 @UseGuards(JwtAuthGuard)
 export class RideController {
@@ -51,6 +61,49 @@ export class RideController {
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
+  @ApiOperation({
+    summary: 'Start a new ride',
+    description:
+      'Initialize a new ride for a motorcycle. Records starting odometer, date, and time. ' +
+      'Application layer: StartRideUseCase validates input and creates ride entity. ' +
+      'Infrastructure layer: Ride repository persists to database.',
+  })
+  @ApiBody({
+    type: StartRideDto,
+    description:
+      'Ride start parameters (motorcycle ID, odometer, date, optional fuel/endDate/notes)',
+    examples: {
+      basic: {
+        description: 'Basic ride start',
+        value: {
+          userMotocycleId: 'moto-uuid-123',
+          startDate: '2024-12-13T10:00:00Z',
+          startOdometer: 15000,
+        },
+      },
+      detailed: {
+        description: 'Ride with optional fields',
+        value: {
+          userMotocycleId: 'moto-uuid-123',
+          startDate: '2024-12-13T10:00:00Z',
+          startOdometer: 15000,
+          endOdometer: 15100,
+          fuelConsumed: 2.5,
+          notes: 'Mountain trail ride',
+        },
+      },
+    },
+  })
+  @ApiResponse({
+    status: HttpStatus.CREATED,
+    description: 'Ride created successfully',
+    type: RideResponseDto,
+  })
+  @ApiResponse({
+    status: HttpStatus.BAD_REQUEST,
+    description:
+      'Invalid input data (missing motorcycle ID, negative odometer, etc.)',
+  })
   async startRide(@Body() dto: StartRideDto): Promise<RideResponseDto> {
     try {
       const ride = await this.startRideUseCase.execute(dto);
@@ -67,6 +120,27 @@ export class RideController {
 
   @Get(':id')
   @HttpCode(HttpStatus.OK)
+  @ApiOperation({
+    summary: 'Get ride details',
+    description:
+      'Retrieve detailed information about a specific ride. ' +
+      'Domain layer: Ride entity encapsulates all ride data. ' +
+      'Application layer: GetRideUseCase retrieves from repository.',
+  })
+  @ApiParam({
+    name: 'id',
+    description: 'Ride ID (UUID)',
+    example: 'ride-uuid-123',
+  })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Ride details retrieved successfully',
+    type: RideResponseDto,
+  })
+  @ApiResponse({
+    status: HttpStatus.NOT_FOUND,
+    description: 'Ride not found',
+  })
   async getRide(@Param('id') rideId: string): Promise<RideResponseDto> {
     const ride = await this.getRideUseCase.execute(rideId);
 
@@ -99,6 +173,52 @@ export class RideController {
 
   @Post(':id/complete')
   @HttpCode(HttpStatus.OK)
+  @ApiOperation({
+    summary: 'Complete an active ride',
+    description:
+      'Mark a ride as complete with final odometer reading. Triggers automatic wear calculation and maintenance alerts. ' +
+      'Domain layer: Ride entity state transition and domain event emission. ' +
+      'Application layer: CompleteRideUseCase emits RideCompletedEvent. ' +
+      'Infrastructure layer: Listeners automatically recalculate part wear and send alerts.',
+  })
+  @ApiParam({
+    name: 'id',
+    description: 'Ride ID to complete',
+    example: 'ride-uuid-123',
+  })
+  @ApiBody({
+    type: CompleteRideDto,
+    description: 'Ride completion data (end odometer, optional fuel consumed)',
+    examples: {
+      basic: {
+        description: 'Complete with just odometer',
+        value: {
+          endOdometer: 15100,
+        },
+      },
+      detailed: {
+        description: 'Complete with fuel data',
+        value: {
+          endOdometer: 15100,
+          fuelConsumed: 2.5,
+        },
+      },
+    },
+  })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description:
+      'Ride completed successfully. Domain event will trigger wear calculations.',
+    type: RideResponseDto,
+  })
+  @ApiResponse({
+    status: HttpStatus.NOT_FOUND,
+    description: 'Ride not found',
+  })
+  @ApiResponse({
+    status: HttpStatus.UNPROCESSABLE_ENTITY,
+    description: 'Ride is already completed or cancelled',
+  })
   async completeRide(
     @Param('id') rideId: string,
     @Body() dto: CompleteRideDto,
