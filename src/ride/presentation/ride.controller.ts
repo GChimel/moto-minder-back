@@ -8,7 +8,10 @@ import {
   Body,
   UseGuards,
   HttpCode,
+  HttpStatus,
   BadRequestException,
+  NotFoundException,
+  UnprocessableEntityException,
 } from '@nestjs/common';
 import { JwtAuthGuard } from '../../auth/presentation/guards/jwt.guard';
 import { StartRideUseCase } from '../application/use-cases/start-ride.use-case';
@@ -29,6 +32,7 @@ import {
   RideNotFoundException,
   InvalidRideStateException,
 } from '../domain/exceptions/ride-exceptions';
+import { RideStatisticsResponseDto } from './dtos/ride-statistics-response.dto';
 
 @Controller('rides')
 @UseGuards(JwtAuthGuard)
@@ -46,35 +50,35 @@ export class RideController {
   ) {}
 
   @Post()
-  @HttpCode(201)
+  @HttpCode(HttpStatus.CREATED)
   async startRide(@Body() dto: StartRideDto): Promise<RideResponseDto> {
     try {
       const ride = await this.startRideUseCase.execute(dto);
       return new RideResponseDto(ride);
     } catch (error) {
-      if (error instanceof RideNotFoundException) {
-        throw new BadRequestException(error.message);
+      if (error instanceof BadRequestException) {
+        throw error;
       }
-      throw error;
+      throw new BadRequestException(
+        error instanceof Error ? error.message : 'Failed to start ride',
+      );
     }
   }
 
   @Get(':id')
-  @HttpCode(200)
+  @HttpCode(HttpStatus.OK)
   async getRide(@Param('id') rideId: string): Promise<RideResponseDto> {
-    try {
-      const ride = await this.getRideUseCase.execute(rideId);
-      return new RideResponseDto(ride);
-    } catch (error) {
-      if (error instanceof RideNotFoundException) {
-        throw new BadRequestException(error.message);
-      }
-      throw error;
+    const ride = await this.getRideUseCase.execute(rideId);
+
+    if (!ride) {
+      throw new NotFoundException(`Ride with id ${rideId} not found`);
     }
+
+    return new RideResponseDto(ride);
   }
 
   @Get('motorcycle/:userMotocycleId')
-  @HttpCode(200)
+  @HttpCode(HttpStatus.OK)
   async getRidesByMotorcycle(
     @Param('userMotocycleId') userMotocycleId: string,
   ): Promise<RideResponseDto[]> {
@@ -84,23 +88,17 @@ export class RideController {
   }
 
   @Get('motorcycle/:userMotocycleId/statistics')
-  @HttpCode(200)
+  @HttpCode(HttpStatus.OK)
   async getRideStatistics(
     @Param('userMotocycleId') userMotocycleId: string,
-  ): Promise<any> {
+  ): Promise<RideStatisticsResponseDto> {
     const statistics =
       await this.getRideStatisticsUseCase.execute(userMotocycleId);
-    return {
-      totalRides: statistics.totalRides,
-      totalDistance: statistics.totalDistance,
-      totalDuration: statistics.totalDuration,
-      averageSpeed: statistics.averageSpeed,
-      averageFuelEconomy: statistics.averageFuelEconomy,
-    };
+    return new RideStatisticsResponseDto(statistics);
   }
 
   @Post(':id/complete')
-  @HttpCode(200)
+  @HttpCode(HttpStatus.OK)
   async completeRide(
     @Param('id') rideId: string,
     @Body() dto: CompleteRideDto,
@@ -110,34 +108,38 @@ export class RideController {
       return new RideResponseDto(ride);
     } catch (error) {
       if (error instanceof RideNotFoundException) {
-        throw new BadRequestException(error.message);
+        throw new NotFoundException(error.message);
       }
       if (error instanceof InvalidRideStateException) {
-        throw new BadRequestException(error.message);
+        throw new UnprocessableEntityException(error.message);
       }
-      throw error;
+      throw new BadRequestException(
+        error instanceof Error ? error.message : 'Failed to complete ride',
+      );
     }
   }
 
   @Post(':id/cancel')
-  @HttpCode(200)
+  @HttpCode(HttpStatus.OK)
   async cancelRide(@Param('id') rideId: string): Promise<RideResponseDto> {
     try {
       const ride = await this.cancelRideUseCase.execute(rideId);
       return new RideResponseDto(ride);
     } catch (error) {
       if (error instanceof RideNotFoundException) {
-        throw new BadRequestException(error.message);
+        throw new NotFoundException(error.message);
       }
       if (error instanceof InvalidRideStateException) {
-        throw new BadRequestException(error.message);
+        throw new UnprocessableEntityException(error.message);
       }
-      throw error;
+      throw new BadRequestException(
+        error instanceof Error ? error.message : 'Failed to cancel ride',
+      );
     }
   }
 
   @Patch(':id/notes')
-  @HttpCode(200)
+  @HttpCode(HttpStatus.OK)
   async updateRideNotes(
     @Param('id') rideId: string,
     @Body() dto: UpdateRideNotesDto,
@@ -147,22 +149,26 @@ export class RideController {
       return new RideResponseDto(ride);
     } catch (error) {
       if (error instanceof RideNotFoundException) {
-        throw new BadRequestException(error.message);
+        throw new NotFoundException(error.message);
       }
-      throw error;
+      throw new BadRequestException(
+        error instanceof Error ? error.message : 'Failed to update ride notes',
+      );
     }
   }
 
   @Delete(':id')
-  @HttpCode(204)
+  @HttpCode(HttpStatus.NO_CONTENT)
   async deleteRide(@Param('id') rideId: string): Promise<void> {
     try {
       await this.deleteRideUseCase.execute(rideId);
     } catch (error) {
       if (error instanceof RideNotFoundException) {
-        throw new BadRequestException(error.message);
+        throw new NotFoundException(error.message);
       }
-      throw error;
+      throw new BadRequestException(
+        error instanceof Error ? error.message : 'Failed to delete ride',
+      );
     }
   }
 
