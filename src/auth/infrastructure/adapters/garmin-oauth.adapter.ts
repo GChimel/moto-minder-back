@@ -43,11 +43,14 @@ export class GarminOAuthAdapter implements IOAuthProvider {
     ) as string;
 
     if (!this.clientId || !this.clientSecret || !this.redirectUri) {
-      throw new Error('Missing Garmin OAuth configuration');
+      console.warn('Garmin OAuth adapter initialized but configuration is missing. Garmin OAuth will be disabled.');
     }
   }
 
   async getProfile(code: string): Promise<OAuthProfile> {
+    if (!this.clientId || !this.clientSecret || !this.redirectUri) {
+      throw new BadRequestException('Garmin OAuth is not configured. Please set GARMIN_CLIENT_ID, GARMIN_CLIENT_SECRET, and GARMIN_REDIRECT_URI environment variables.');
+    }
     try {
       const tokens = await this.exchangeCodeForTokens(code);
 

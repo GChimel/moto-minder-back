@@ -31,41 +31,50 @@ describe('StravaOAuthAdapter', () => {
       expect(adapter).toBeDefined();
     });
 
-    it('should throw error if STRAVA_CLIENT_ID is missing', () => {
+    it('should initialize successfully even if STRAVA_CLIENT_ID is missing', () => {
       configService.get.mockImplementation((key: string) => {
         if (key === 'STRAVA_CLIENT_ID') return undefined;
         return 'test-value';
       });
 
-      expect(() => new StravaOAuthAdapter(configService)).toThrow(
-        'Missing Strava OAuth configuration',
-      );
+      const adapterWithoutClientId = new StravaOAuthAdapter(configService);
+      expect(adapterWithoutClientId).toBeDefined();
     });
 
-    it('should throw error if STRAVA_CLIENT_SECRET is missing', () => {
+    it('should initialize successfully even if STRAVA_CLIENT_SECRET is missing', () => {
       configService.get.mockImplementation((key: string) => {
         if (key === 'STRAVA_CLIENT_SECRET') return undefined;
         return 'test-value';
       });
 
-      expect(() => new StravaOAuthAdapter(configService)).toThrow(
-        'Missing Strava OAuth configuration',
-      );
+      const adapterWithoutSecret = new StravaOAuthAdapter(configService);
+      expect(adapterWithoutSecret).toBeDefined();
     });
 
-    it('should throw error if STRAVA_REDIRECT_URI is missing', () => {
+    it('should initialize successfully even if STRAVA_REDIRECT_URI is missing', () => {
       configService.get.mockImplementation((key: string) => {
         if (key === 'STRAVA_REDIRECT_URI') return undefined;
         return 'test-value';
       });
 
-      expect(() => new StravaOAuthAdapter(configService)).toThrow(
-        'Missing Strava OAuth configuration',
-      );
+      const adapterWithoutRedirectUri = new StravaOAuthAdapter(configService);
+      expect(adapterWithoutRedirectUri).toBeDefined();
     });
   });
 
   describe('getProfile', () => {
+    it('should throw BadRequestException if configuration is missing', async () => {
+      const configServiceWithoutConfig = {
+        get: jest.fn((key: string) => undefined),
+      } as unknown as ConfigService;
+
+      const adapterWithoutConfig = new StravaOAuthAdapter(configServiceWithoutConfig);
+
+      await expect(adapterWithoutConfig.getProfile('code')).rejects.toThrow(
+        BadRequestException,
+      );
+    });
+
     it('should return OAuthProfile with strava provider', async () => {
       const mockCode = 'auth-code-123';
 

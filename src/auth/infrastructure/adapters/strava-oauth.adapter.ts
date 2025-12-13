@@ -54,11 +54,14 @@ export class StravaOAuthAdapter implements IOAuthProvider {
     ) as string;
 
     if (!this.clientId || !this.clientSecret || !this.redirectUri) {
-      throw new Error('Missing Strava OAuth configuration');
+      console.warn('Strava OAuth adapter initialized but configuration is missing. Strava OAuth will be disabled.');
     }
   }
 
   async getProfile(code: string): Promise<OAuthProfile> {
+    if (!this.clientId || !this.clientSecret || !this.redirectUri) {
+      throw new BadRequestException('Strava OAuth is not configured. Please set STRAVA_CLIENT_ID, STRAVA_CLIENT_SECRET, and STRAVA_REDIRECT_URI environment variables.');
+    }
     try {
       const tokenResponse = await this.exchangeCodeForTokens(code);
 
