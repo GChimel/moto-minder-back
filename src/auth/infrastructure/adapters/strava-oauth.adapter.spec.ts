@@ -65,10 +65,12 @@ describe('StravaOAuthAdapter', () => {
   describe('getProfile', () => {
     it('should throw BadRequestException if configuration is missing', async () => {
       const configServiceWithoutConfig = {
-        get: jest.fn((key: string) => undefined),
+        get: jest.fn(() => undefined),
       } as unknown as ConfigService;
 
-      const adapterWithoutConfig = new StravaOAuthAdapter(configServiceWithoutConfig);
+      const adapterWithoutConfig = new StravaOAuthAdapter(
+        configServiceWithoutConfig,
+      );
 
       await expect(adapterWithoutConfig.getProfile('code')).rejects.toThrow(
         BadRequestException,
