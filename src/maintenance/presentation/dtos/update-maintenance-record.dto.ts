@@ -1,4 +1,24 @@
-import { IsString, IsNumber, IsOptional, Min } from 'class-validator';
+import {
+  IsString,
+  IsNumber,
+  IsOptional,
+  Min,
+  ValidateNested,
+  IsInt,
+} from 'class-validator';
+import { Type } from 'class-transformer';
+
+export class NextServiceIntervalDto {
+  @IsOptional()
+  @IsInt()
+  @Min(0)
+  intervalKm?: number;
+
+  @IsOptional()
+  @IsInt()
+  @Min(0)
+  intervalMonths?: number;
+}
 
 export class UpdateMaintenanceRecordDto {
   @IsNumber()
@@ -15,8 +35,7 @@ export class UpdateMaintenanceRecordDto {
   notes?: string;
 
   @IsOptional()
-  nextServiceInterval?: {
-    intervalKm?: number;
-    intervalMonths?: number;
-  };
+  @ValidateNested()
+  @Type(() => NextServiceIntervalDto)
+  nextServiceInterval?: NextServiceIntervalDto;
 }

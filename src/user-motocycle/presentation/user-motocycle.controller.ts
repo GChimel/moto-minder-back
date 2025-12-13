@@ -130,7 +130,9 @@ export class UserMotocycleController {
     await this.deleteUserMotocycleUseCase.execute(id);
   }
 
-  private mapToResponse(userMotocycle: UserMotocycle): UserMotocycleResponseDto {
+  private mapToResponse(
+    userMotocycle: UserMotocycle,
+  ): UserMotocycleResponseDto {
     return {
       id: userMotocycle.getId().getValue(),
       userId: userMotocycle.getUserId().getValue(),

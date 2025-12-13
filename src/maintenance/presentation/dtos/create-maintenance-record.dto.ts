@@ -6,11 +6,26 @@ import {
   IsOptional,
   Min,
   IsInt,
+  IsNotEmpty,
+  ValidateNested,
 } from 'class-validator';
 import { Type } from 'class-transformer';
 import { ServiceType } from '../../domain/enums/service-type.enum';
 
+export class NextServiceIntervalDto {
+  @IsOptional()
+  @IsInt()
+  @Min(0)
+  intervalKm?: number;
+
+  @IsOptional()
+  @IsInt()
+  @Min(0)
+  intervalMonths?: number;
+}
+
 export class CreateMaintenanceRecordDto {
+  @IsNotEmpty()
   @IsString()
   userMotocycleId: string;
 
@@ -39,8 +54,7 @@ export class CreateMaintenanceRecordDto {
   notes?: string;
 
   @IsOptional()
-  nextServiceInterval?: {
-    intervalKm?: number;
-    intervalMonths?: number;
-  };
+  @ValidateNested()
+  @Type(() => NextServiceIntervalDto)
+  nextServiceInterval?: NextServiceIntervalDto;
 }

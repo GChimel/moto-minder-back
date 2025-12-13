@@ -16,7 +16,7 @@ describe('Event-Driven Integration - Ride Completion Flow', () => {
   });
 
   describe('RideCompletedEvent', () => {
-    it('should emit ride.completed event when ride is completed', async () => {
+    it('should emit ride.completed event when ride is completed', () => {
       const eventSpy = jest.fn();
       eventEmitter.on('ride.completed', eventSpy);
 
@@ -153,7 +153,6 @@ describe('Event-Driven Integration - Ride Completion Flow', () => {
 
     it('should support event filtering', () => {
       const listener = jest.fn();
-      const filterFn = (event: RideCompletedEvent) => event.endOdometer > 10000;
 
       eventEmitter.on('ride.completed', listener);
 
@@ -185,7 +184,10 @@ describe('Event-Driven Integration - Ride Completion Flow', () => {
         85,
         70,
       );
-      await eventEmitter.emitAsync('maintenance-threshold.crossed', thresholdEvent);
+      await eventEmitter.emitAsync(
+        'maintenance-threshold.crossed',
+        thresholdEvent,
+      );
 
       expect(rideListener).toHaveBeenCalledWith(rideEvent);
       expect(thresholdListener).toHaveBeenCalledWith(thresholdEvent);
@@ -212,9 +214,15 @@ describe('Event-Driven Integration - Ride Completion Flow', () => {
         85,
         70,
       );
-      await eventEmitter.emitAsync('maintenance-threshold.crossed', thresholdEvent);
+      await eventEmitter.emitAsync(
+        'maintenance-threshold.crossed',
+        thresholdEvent,
+      );
 
-      expect(eventOrder).toEqual(['ride.completed', 'maintenance-threshold.crossed']);
+      expect(eventOrder).toEqual([
+        'ride.completed',
+        'maintenance-threshold.crossed',
+      ]);
     });
   });
 });

@@ -1,8 +1,18 @@
-import { IsString, IsInt, Min, Max, IsOptional } from 'class-validator';
+import {
+  IsString,
+  IsInt,
+  Min,
+  Max,
+  IsOptional,
+  MinLength,
+  MaxLength,
+} from 'class-validator';
 
 export class UpdateUserMotocycleDto {
   @IsOptional()
   @IsString()
+  @MinLength(1, { message: 'Nickname must be at least 1 character long' })
+  @MaxLength(100, { message: 'Nickname must be at most 100 characters long' })
   nickname?: string;
 
   @IsOptional()
