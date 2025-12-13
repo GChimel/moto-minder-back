@@ -1,4 +1,4 @@
-import { Injectable, Inject } from '@nestjs/common';
+import { Injectable, Inject, Logger } from '@nestjs/common';
 import {
   PART_WEAR_REPOSITORY,
   PartWearRepositoryPort,
@@ -24,6 +24,7 @@ export interface CalculatePartWearResult {
 
 @Injectable()
 export class CalculatePartWearUseCase {
+  private readonly logger = new Logger(CalculatePartWearUseCase.name);
   private readonly wearCalculationService: WearCalculationService;
 
   constructor(
@@ -39,7 +40,14 @@ export class CalculatePartWearUseCase {
     partWearId: string,
     currentOdometer: number,
   ): Promise<CalculatePartWearResult> {
+    this.logger.log(
+      `Calculating wear for part: ${partWearId}, odometer: ${currentOdometer}`,
+    );
+
     if (currentOdometer < 0) {
+      this.logger.warn(
+        `Wear calculation failed: Invalid odometer reading - ${currentOdometer}`,
+      );
       throw new InvalidWearCalculationException(
         'Current odometer cannot be negative',
       );
@@ -47,6 +55,9 @@ export class CalculatePartWearUseCase {
 
     const partWear = await this.partWearRepository.findById(partWearId);
     if (!partWear) {
+      this.logger.warn(
+        `Wear calculation failed: Part wear not found - ${partWearId}`,
+      );
       throw new PartWearNotFoundException(partWearId);
     }
 
@@ -54,12 +65,18 @@ export class CalculatePartWearUseCase {
       partWear.getMotorcyclePartId().getValue(),
     );
     if (!motorcyclePart) {
+      this.logger.warn(
+        `Wear calculation failed: Motorcycle part not found for part wear ${partWearId}`,
+      );
       throw new InvalidWearCalculationException(
         `Motorcycle part not found for part wear ${partWearId}`,
       );
     }
 
     if (!motorcyclePart.getIsActive()) {
+      this.logger.warn(
+        `Wear calculation failed: Motorcycle part is no longer active - ${partWearId}`,
+      );
       throw new InvalidWearCalculationException(
         `Motorcycle part is no longer active`,
       );
@@ -87,6 +104,10 @@ export class CalculatePartWearUseCase {
     );
 
     const updatedPartWear = await this.partWearRepository.save(partWear);
+
+    this.logger.log(
+      `Wear calculated: ${partWearId}, previous: ${previousWearPercentage}%, current: ${currentWearPercentage}%, maintenance due: ${calculationResult.isMaintenanceDue}`,
+    );
 
     return {
       partWear: updatedPartWear,

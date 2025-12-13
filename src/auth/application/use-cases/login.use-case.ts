@@ -1,6 +1,7 @@
 import {
   Inject,
   Injectable,
+  Logger,
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
@@ -22,6 +23,8 @@ interface LoginDto {
 
 @Injectable()
 export class LoginUseCase {
+  private readonly logger = new Logger(LoginUseCase.name);
+
   constructor(
     @Inject(USER_REPOSITORY)
     private readonly userRepository: UserRepositoryPort,
@@ -31,15 +34,21 @@ export class LoginUseCase {
   ) {}
 
   async execute(dto: LoginDto): Promise<{ token: string }> {
+    this.logger.log(`Login attempt for email: ${dto.email}`);
+
     const user = await this.userRepository.findByEmail(dto.email);
 
     if (!user) {
+      this.logger.warn(`Login failed: User not found for email: ${dto.email}`);
       throw new NotFoundException('User not found');
     }
 
     const isPasswordValid = await UserPassword.compare(dto.password, user);
 
     if (isPasswordValid == false) {
+      this.logger.warn(
+        `Login failed: Invalid password for user: ${user.getId().getValue()}`,
+      );
       throw new UnauthorizedException('Invalid credentials');
     }
 
@@ -48,6 +57,8 @@ export class LoginUseCase {
     };
 
     const token = await this.authTokenGenerator.generate(payload);
+
+    this.logger.log(`Login successful for user: ${user.getId().getValue()}`);
 
     return { token };
   }

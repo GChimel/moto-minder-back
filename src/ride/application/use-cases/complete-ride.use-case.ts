@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { Inject } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { Ride } from '../../domain/entities/ride.entity';
@@ -16,6 +16,8 @@ export interface CompleteRideDto {
 
 @Injectable()
 export class CompleteRideUseCase {
+  private readonly logger = new Logger(CompleteRideUseCase.name);
+
   constructor(
     @Inject(RIDE_REPOSITORY)
     private readonly repository: RideRepositoryPort,
@@ -23,12 +25,18 @@ export class CompleteRideUseCase {
   ) {}
 
   async execute(id: string, dto: CompleteRideDto): Promise<Ride> {
+    this.logger.log(
+      `Completing ride: ${id}, endOdometer: ${dto.endOdometer}, fuel: ${dto.fuelConsumed}`,
+    );
+
     if (!id || id.trim() === '') {
+      this.logger.warn('Ride completion failed: Ride ID is required');
       throw new InvalidArgumentException('id', 'Ride ID is required');
     }
 
     const ride = await this.repository.findById(id);
     if (!ride) {
+      this.logger.warn(`Ride completion failed: Ride not found - ${id}`);
       throw new RideNotFoundException(id);
     }
 
@@ -37,7 +45,10 @@ export class CompleteRideUseCase {
     const savedRide = await this.repository.save(ride);
 
     const events = savedRide.getDomainEvents();
+    this.logger.log(`Ride completed: ${id}, events to emit: ${events.length}`);
+
     for (const event of events) {
+      this.logger.debug(`Emitting event: ${event.getEventName()}`);
       this.eventEmitter.emit(event.getEventName(), event);
     }
     savedRide.clearDomainEvents();
