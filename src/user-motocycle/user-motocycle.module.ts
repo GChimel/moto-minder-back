@@ -32,5 +32,6 @@ import { MotocycleModelsModule } from '../motocycle-model/motocycle-models.modul
     },
   ],
   controllers: [UserMotocycleController],
+  exports: [USER_MOTOCYCLE_REPOSITORY],
 })
 export class UserMotocycleModule {}
