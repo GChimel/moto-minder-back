@@ -2,9 +2,11 @@ import {
   Body,
   Controller,
   Delete,
+  ForbiddenException,
   Get,
   HttpCode,
   HttpStatus,
+  NotFoundException,
   Param,
   Patch,
   Post,
@@ -22,6 +24,7 @@ import { UserMotocycleResponseDto } from './dtos/user-motocycle-response.dto';
 import { JwtAuthGuard } from '../../auth/presentation/guards/jwt.guard';
 import { GetUser } from '../../auth/presentation/decorators/get-user.decorator';
 import { User } from '../../user/domain/entities/user.entity';
+import { UserMotocycle } from '../domain/entities/user-motocycle.entity';
 
 @Controller('user-motocycles')
 @UseGuards(JwtAuthGuard)
@@ -51,13 +54,6 @@ export class UserMotocycleController {
     return this.mapToResponse(userMotocycle);
   }
 
-  @Get()
-  @HttpCode(HttpStatus.OK)
-  async findAll(): Promise<UserMotocycleResponseDto[]> {
-    const userMotocycles = await this.findUserMotocyclesUseCase.execute();
-    return userMotocycles.map((m) => this.mapToResponse(m));
-  }
-
   @Get('me')
   @HttpCode(HttpStatus.OK)
   async findMyMotocycles(
@@ -71,8 +67,22 @@ export class UserMotocycleController {
 
   @Get(':id')
   @HttpCode(HttpStatus.OK)
-  async findById(@Param('id') id: string): Promise<UserMotocycleResponseDto> {
+  async findById(
+    @Param('id') id: string,
+    @GetUser() user: User,
+  ): Promise<UserMotocycleResponseDto> {
     const userMotocycle = await this.findUserMotocycleByIdUseCase.execute(id);
+
+    if (!userMotocycle) {
+      throw new NotFoundException(`Motorcycle with id ${id} not found`);
+    }
+
+    if (userMotocycle.getUserId().getValue() !== user.getId().getValue()) {
+      throw new ForbiddenException(
+        'You do not have permission to access this motorcycle',
+      );
+    }
+
     return this.mapToResponse(userMotocycle);
   }
 
@@ -81,37 +91,54 @@ export class UserMotocycleController {
   async update(
     @Param('id') id: string,
     @Body() dto: UpdateUserMotocycleDto,
+    @GetUser() user: User,
   ): Promise<UserMotocycleResponseDto> {
-    const userMotocycle = await this.updateUserMotocycleUseCase.execute(
+    const userMotocycle = await this.findUserMotocycleByIdUseCase.execute(id);
+
+    if (!userMotocycle) {
+      throw new NotFoundException(`Motorcycle with id ${id} not found`);
+    }
+
+    if (userMotocycle.getUserId().getValue() !== user.getId().getValue()) {
+      throw new ForbiddenException(
+        'You do not have permission to update this motorcycle',
+      );
+    }
+
+    const updatedMotocycle = await this.updateUserMotocycleUseCase.execute(
       id,
       dto,
     );
-    return this.mapToResponse(userMotocycle);
+    return this.mapToResponse(updatedMotocycle);
   }
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
-  async delete(@Param('id') id: string): Promise<void> {
+  async delete(@Param('id') id: string, @GetUser() user: User): Promise<void> {
+    const userMotocycle = await this.findUserMotocycleByIdUseCase.execute(id);
+
+    if (!userMotocycle) {
+      throw new NotFoundException(`Motorcycle with id ${id} not found`);
+    }
+
+    if (userMotocycle.getUserId().getValue() !== user.getId().getValue()) {
+      throw new ForbiddenException(
+        'You do not have permission to delete this motorcycle',
+      );
+    }
+
     await this.deleteUserMotocycleUseCase.execute(id);
   }
 
-  private mapToResponse(userMotocycle: any): UserMotocycleResponseDto {
+  private mapToResponse(userMotocycle: UserMotocycle): UserMotocycleResponseDto {
     return {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
       id: userMotocycle.getId().getValue(),
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
       userId: userMotocycle.getUserId().getValue(),
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
       motocycleModelId: userMotocycle.getMotocycleModelId().getValue(),
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
       nickname: userMotocycle.getNickname().getValue(),
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
       manufacturingYear: userMotocycle.getManufacturingYear().getValue(),
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
       currentOdometer: userMotocycle.getCurrentOdometer().getValue(),
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
       createdAt: userMotocycle.getCreatedAt(),
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
       updatedAt: userMotocycle.getUpdatedAt(),
     };
   }
