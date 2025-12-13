@@ -5,11 +5,16 @@ import { AppModule } from './app.module';
 import { swaggerConfig } from './shared/presentation/swagger/swagger.config';
 import { HttpExceptionFilter } from './shared/presentation/filters/http-exception.filter';
 import { AllExceptionsFilter } from './shared/presentation/filters/all-exceptions.filter';
+import { DomainExceptionFilter } from './shared/presentation/filters/domain-exception.filter';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  app.useGlobalFilters(new AllExceptionsFilter(), new HttpExceptionFilter());
+  app.useGlobalFilters(
+    new DomainExceptionFilter(),
+    new AllExceptionsFilter(),
+    new HttpExceptionFilter(),
+  );
 
   app.useGlobalPipes(
     new ValidationPipe({
