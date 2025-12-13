@@ -10,6 +10,7 @@ import { PartWearController } from './presentation/part-wear.controller';
 import { PART_WEAR_REPOSITORY } from './application/ports/part-wear.repository.port';
 import { MotorcyclePartModule } from '../motorcycle-part/motorcycle-part.module';
 import { MotorcyclePartSchema } from '../motorcycle-part/infrastructure/persistence/motorcycle-part.schema';
+import { OnRideCompletedListener } from './application/listeners/on-ride-completed.listener';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { MotorcyclePartSchema } from '../motorcycle-part/infrastructure/persiste
     GetPartWearUseCase,
     GetMotorcyclePartsWearUseCase,
     GetPartsDueForMaintenanceUseCase,
+    OnRideCompletedListener,
     {
       provide: PART_WEAR_REPOSITORY,
       useClass: TypeOrmPartWearRepository,

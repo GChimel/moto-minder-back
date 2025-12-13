@@ -7,6 +7,8 @@ import {
   InvalidRideStateException,
   InvalidOdometerRangeException,
 } from '../exceptions/ride-exceptions';
+import { DomainEvent } from '../../../shared/domain/events/domain-event';
+import { RideCompletedEvent } from '../events/ride-completed.event';
 
 export interface CreateRideDto {
   userMotocycleId: string;
@@ -30,6 +32,7 @@ export class Ride {
   private status: RideStatus;
   private readonly createdAt: Date;
   private updatedAt: Date;
+  private domainEvents: DomainEvent[] = [];
 
   constructor(
     id: IdVO,
@@ -176,6 +179,14 @@ export class Ride {
     }
 
     this.updatedAt = new Date();
+
+    this.addDomainEvent(
+      new RideCompletedEvent(
+        this.id.getValue(),
+        this.userMotocycleId.getValue(),
+        endOdometer,
+      ),
+    );
   }
 
   cancelRide(): void {
@@ -250,5 +261,17 @@ export class Ride {
         'End odometer cannot be less than start odometer',
       );
     }
+  }
+
+  addDomainEvent(event: DomainEvent): void {
+    this.domainEvents.push(event);
+  }
+
+  getDomainEvents(): DomainEvent[] {
+    return this.domainEvents;
+  }
+
+  clearDomainEvents(): void {
+    this.domainEvents = [];
   }
 }

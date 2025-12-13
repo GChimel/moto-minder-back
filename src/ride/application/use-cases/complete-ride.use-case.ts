@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { Inject } from '@nestjs/common';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 import { Ride } from '../../domain/entities/ride.entity';
 import {
   RIDE_REPOSITORY,
@@ -18,6 +19,7 @@ export class CompleteRideUseCase {
   constructor(
     @Inject(RIDE_REPOSITORY)
     private readonly repository: RideRepositoryPort,
+    private readonly eventEmitter: EventEmitter2,
   ) {}
 
   async execute(id: string, dto: CompleteRideDto): Promise<Ride> {
@@ -32,6 +34,14 @@ export class CompleteRideUseCase {
 
     ride.completeRide(dto.endOdometer, dto.fuelConsumed);
 
-    return this.repository.save(ride);
+    const savedRide = await this.repository.save(ride);
+
+    const events = savedRide.getDomainEvents();
+    for (const event of events) {
+      this.eventEmitter.emit(event.getEventName(), event);
+    }
+    savedRide.clearDomainEvents();
+
+    return savedRide;
   }
 }
