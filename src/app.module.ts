@@ -10,6 +10,7 @@ import { MaintenanceModule } from './maintenance/maintenance.module';
 import { RideModule } from './ride/ride.module';
 import { MotorcyclePartModule } from './motorcycle-part/motorcycle-part.module';
 import { PartWearModule } from './part-wear/part-wear.module';
+import { NotificationModule } from './notification/notification.module';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { PartWearModule } from './part-wear/part-wear.module';
     PartWearModule,
     MaintenanceModule,
     RideModule,
+    NotificationModule,
   ],
   controllers: [],
   providers: [],
