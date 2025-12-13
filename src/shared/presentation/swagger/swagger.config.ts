@@ -55,14 +55,12 @@ export const swaggerConfig = new DocumentBuilder()
     `,
   )
   .setVersion('1.0.0')
-  .setContact({
-    name: 'Moto-Minder Development',
-    url: 'https://github.com/chimel/moto-minder',
-  })
-  .setLicense({
-    name: 'MIT',
-    url: 'https://opensource.org/licenses/MIT',
-  })
+  .setContact(
+    'Moto-Minder Development',
+    'https://github.com/chimel/moto-minder',
+    'support@motominder.com',
+  )
+  .setLicense('MIT', 'https://opensource.org/licenses/MIT')
   .addServer('http://localhost:3000', 'Development Server')
   .addServer('https://api.motominder.com', 'Production Server')
   .addBearerAuth(
